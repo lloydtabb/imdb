@@ -1,0 +1,8 @@
+[
+  {
+    "name": "IMDB",
+    "dataTables": ["names.parquet","principals.parquet","titles.parquet"],
+    "modelPath": "./imdb.malloy",
+    "queryPath": "./imdb-queries.malloy"
+  }
+]
