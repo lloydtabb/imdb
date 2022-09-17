@@ -9,7 +9,7 @@ Run 'make' to download and create a small subset of the IMDB Data to explore.
 
 ## About Fiddles
 
-https://lloydtabb.github.io/malloy_fiddle_dist
+https://github.com/lloydtabb/malloy_fiddle_dist
 
 ## Credit
 
