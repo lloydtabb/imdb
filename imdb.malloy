@@ -2,7 +2,7 @@
 //  https://www.imdb.com/interfaces/
 //
 //  Github: https://github.com/lloydtabb/imdb_fiddle
-//  More Fiddles: https://github.com/lloydtabb/malloy_fiddle_dist/README.md
+//  More Fiddles: https://github.com/lloydtabb/malloy_fiddle_dist/
 
 
 source: people is table('duckdb:names.parquet') {
