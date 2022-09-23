@@ -4,5 +4,11 @@
     "dataTables": ["names.parquet","principals.parquet","titles.parquet"],
     "modelPath": "./imdb.malloy",
     "queryPath": "./imdb-queries.malloy"
+  },
+  {
+    "name": "IMDB - Harvard CS050 Questions",
+    "dataTables": ["names.parquet","principals.parquet","titles.parquet"],
+    "modelPath": "./imdb.malloy",
+    "queryPath": "./harvard-cs050.malloy"
   }
 ]
