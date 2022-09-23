@@ -4,6 +4,7 @@ import "imdb.malloy"
 // Name: Top Titles
 query: movies->by_title + { limit: 20 } 
 
+// --
 // Name: Top 20 Horror Movies
 query: movies-> by_title + { 
   where: genres.value = 'Horror'
