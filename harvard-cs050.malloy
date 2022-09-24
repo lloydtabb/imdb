@@ -19,8 +19,10 @@ query: movies->{
 }
 
 // --
-// Name: Bonus: Movie Titles after 2008
-//  just used the named query
+// Name: Malloy: Movie Titles after 2008
+//  Getting a list of titles is a thing that you commonly
+//  want to do in this data set.  We use the built in
+//  query 'by_titole'
 query: movies {
   where: startYear = 2008
 } -> by_title
@@ -73,9 +75,8 @@ query: movies -> {
 
 // --
 // Name: Malloy : Emma Stone Titles
-// You may assume that there is only one person in the database 
-//  with the name Emma Stone.
-// Again, more simple in Malloy
+// This is just a query for a list of titles with different
+//  filters set.
 query: movies{
   where: principals.people.primaryName = 'Emma Stone' 
     and startYear >= 2018
@@ -108,14 +109,9 @@ query: movies -> {
 
 // --
 // Name: Malloy: Movies with 10 rating
-// Movies released in 2018 should be included, as 
-//  should movies with release dates in the future.
-// Write a query to determine the number of movies with 
-//  an IMDb rating of 10.0.
-// Your query should output a table with a single 
-//  column and a single row (not including the 
-//  header) containing the number of movies with a 10.0 rating.
-
+// It would be handy to know which titles had the
+//  top rating, so lets nest 'by_title' so see which ones
+//  they are.
 query: movies {
   where: ratings.averageRating = 10
 } -> {
@@ -154,7 +150,8 @@ query: movies -> {
 
 // --
 // Name: Malloy: Harry Potter Movies
-// Write a Query to list the titles and release years of 
+// List of titles, once again, but we want order by
+//  start year, so we change the ordering of 'by_title'
 
 query: movies {
   where: primaryTitle ~ 'Harry Potter%'
@@ -203,14 +200,13 @@ query: movies -> {
 
 // --
 // Name: Malloy: Toy Story Who?
-// Write a query to list the names of all people 
-//  who starred in Toy Story.
-// Your query should output a table with a single column for 
-//  the name of each person. You may assume that there is only 
-//  one movie in the database  with the title Toy Story.
+// Let's get he list and what they did on it....
+
 query: movies {
   where: primaryTitle = 'Toy Story'
-} -> by_name
+} -> by_name + {
+    group_by: principals.category
+  }
 
 // --
 // Name: Question: Who's Who 2004
@@ -246,8 +242,6 @@ query: movies -> {
 
 // --
 // Name: Malloy: Who's Who 2004
-// Write a query to list the names of all people who starred 
-//  in a movie released in 2004, ordered by birth year.
 
 query: movies {
   where: startYear = 2004
@@ -283,10 +277,7 @@ query: movies -> {
 
 // --
 // Name: Bonus: High Directors
-// Write  SQL query to list the names of all people who have 
-//  directed a movie that received a rating of at least 9.0.
-// Show their movies the year and the rating as a subtable
-
+// Let's get the list of directors, but also their titles.
 query: movies -> {
   where: ratings.averageRating >= 9
     and principals.category = 'director'
