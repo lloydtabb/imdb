@@ -19,6 +19,14 @@ query: movies->{
 }
 
 // --
+// Name: Bonus: Movie Titles after 2008
+//  just used the named query
+query: movies {
+  where: startYear = 2008
+} -> by_title
+
+
+// --
 // Name: Question 2: When was Emma Stone Born?
 // Write a query to determine the birth year of
 //   Emma Stone.
@@ -49,7 +57,7 @@ query: people -> {
 //  title of each movie.
 
 // --
-// Name: Question 3: Emma Stone Titles
+// Name: Answer: Emma Stone Titles
 // You may assume that there is only one person in the database 
 //  with the name Emma Stone.
 // Write a query to list the titles of all movies with
@@ -62,6 +70,16 @@ query: movies -> {
   project: primaryTitle
   order_by: 1
 }
+
+// --
+// Name: Malloy : Emma Stone Titles
+// You may assume that there is only one person in the database 
+//  with the name Emma Stone.
+// Again, more simple in Malloy
+query: movies{
+  where: principals.people.primaryName = 'Emma Stone' 
+    and startYear >= 2018
+} -> by_title
 
 // --
 // Name: Question: Movies with 10 rating
@@ -86,6 +104,23 @@ query: movies -> {
 query: movies -> {
   where: ratings.averageRating = 10
   aggregate: title_count
+}
+
+// --
+// Name: Malloy: Movies with 10 rating
+// Movies released in 2018 should be included, as 
+//  should movies with release dates in the future.
+// Write a query to determine the number of movies with 
+//  an IMDb rating of 10.0.
+// Your query should output a table with a single 
+//  column and a single row (not including the 
+//  header) containing the number of movies with a 10.0 rating.
+
+query: movies {
+  where: ratings.averageRating = 10
+} -> {
+  aggregate: title_count
+  nest: by_title
 }
 
 // --
@@ -116,6 +151,14 @@ query: movies -> {
   project: primaryTitle, startYear
   order_by: 2
 }
+
+// --
+// Name: Malloy: Harry Potter Movies
+// Write a Query to list the titles and release years of 
+
+query: movies {
+  where: primaryTitle ~ 'Harry Potter%'
+} -> by_title + {order_by: startYear}
 
 // --
 // Name: Question: Average Rating in 2012
@@ -159,6 +202,17 @@ query: movies -> {
 }
 
 // --
+// Name: Malloy: Toy Story Who?
+// Write a query to list the names of all people 
+//  who starred in Toy Story.
+// Your query should output a table with a single column for 
+//  the name of each person. You may assume that there is only 
+//  one movie in the database  with the title Toy Story.
+query: movies {
+  where: primaryTitle = 'Toy Story'
+} -> by_name
+
+// --
 // Name: Question: Who's Who 2004
 // Write a query to list the names of all people who starred 
 //  in a movie released in 2004, ordered by birth year.
@@ -189,6 +243,18 @@ query: movies -> {
     principals.people.birthYear
   order_by: 1
 } 
+
+// --
+// Name: Malloy: Who's Who 2004
+// Write a query to list the names of all people who starred 
+//  in a movie released in 2004, ordered by birth year.
+
+query: movies {
+  where: startYear = 2004
+} -> by_name + {
+    group_by: principals.people.birthYear
+    order_by: birthYear
+}
 
 // --
 // Name: Question: High Directors
