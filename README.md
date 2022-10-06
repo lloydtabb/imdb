@@ -14,7 +14,9 @@ https://github.com/lloydtabb/malloy_fiddle_dist
 ## Credit
 
 Information courtesy of IMDb (https://www.imdb.com).
- Used with permission. 
- For personal / educational use only
+
+Used with permission. 
+
+For personal / educational use only
 
 
