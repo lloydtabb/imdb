@@ -13,8 +13,8 @@ https://github.com/lloydtabb/malloy_fiddle_dist
 
 ## Credit
 
-Data here is from the IMDB Data set https://www.imdb.com/interfaces/
+Information courtesy of IMDb (https://www.imdb.com).
+ Used with permission. 
+ For personal / educational use only
 
-The data here is a small extract from the IMDB data
-is for educational use only.
 
