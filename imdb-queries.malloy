@@ -65,19 +65,19 @@ query: movies->by_name + {
   nest: by_title + { limit: 5}
 }
 
-// s--
-// // Name: by Genre, top movies, directors and actors
-// query: movies-> by_genre + {
-//   nest: by_title + { limit: 5}
-//   nest: by_director is by_name + {
-//     where: principals.category = 'director'
-//     limit: 5
-//   }
-//   // nest: by_actor is by_name + {
-//   //   where: principals.category ~ 'act%'
-//   //   limit: 5
-//   // }
-// }
+--
+// Name: by Genre, top movies, directors and actors
+query: movies-> by_genre + {
+  nest: by_title + { limit: 5}
+  nest: by_director is by_name + {
+    where: principals.category = 'director'
+    limit: 5
+  }
+  nest: by_actor is by_name + {
+    where: principals.category ~ 'act%'
+    limit: 5
+  }
+}
 
 // -- 
 // Name: Steven Spielberg Movies
