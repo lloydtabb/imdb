@@ -16,28 +16,28 @@ For personal / educational use only.
 
 ## Queries in `imdb.malloy`
 
-### <!--malloy-query model="imdb.malloy" source="movies" query="by_title"--> `by_title`
+### <!--malloy-query model="imdb.malloy" source="movies2" query="by_title"--> `by_title`
 Title, start year, and number of ratings received, ordered by number of ratings.
 
-### <!--malloy-query model="imdb.malloy" source="movies" query="by_year"--> `by_year`
+### <!--malloy-query model="imdb.malloy" source="movies2" query="by_year"--> `by_year`
 The number of titles produced per year
 
-### <!--malloy-query model="imdb.malloy" source="movies" query="by_name"--> `by_name`
+### <!--malloy-query model="imdb.malloy" source="movies2" query="by_name"--> `by_name`
 For each person, the overall number of ratings on titles they were in, and the count of titles.
 
-### <!--malloy-query model="imdb.malloy" source="movies" query="by_job_category"--> `by_job_category`
+### <!--malloy-query model="imdb.malloy" source="movies2" query="by_job_category"--> `by_job_category`
 Job category by number of titles
 
-### <!--malloy-query model="imdb.malloy" source="movies" query="by_genre"--> `by_genre`
+### <!--malloy-query model="imdb.malloy" source="movies2" query="by_genre"--> `by_genre`
 For each genre, the count of titles, and percent of all titles that are this genre. Note that a film may have multiple genres.
 
-### <!--malloy-query model="imdb.malloy" source="movies" query="by_character"--> `by_character`
+### <!--malloy-query model="imdb.malloy" source="movies2" query="by_character"--> `by_character`
 Number of titles for each character name
 
-### <!--malloy-query model="imdb.malloy" source="movies" query="by_year_and_genre"--> `by_year_and_genre`
+### <!--malloy-query model="imdb.malloy" source="movies2" query="by_year_and_genre"--> `by_year_and_genre`
 For each year, the number of titles plus `by_genre` nested to show the breakdown by genre.
 
-### <!--malloy-query model="imdb.malloy" source="movies" query="titles_dashboard"--> `titles_dashboard`
+### <!--malloy-query model="imdb.malloy" source="movies2" query="titles_dashboard"--> `titles_dashboard`
 Produces a rich dashboard for each title, ordered by production year. Generally used with a filter.
 
 
@@ -47,7 +47,7 @@ Produces a rich dashboard for each title, ordered by production year. Generally 
 
 **imdb-queries.malloy**: Extends the base model to add a large variety of potentially interesting queries.
 
-**imdb-queries2.malloy**: Extends the base model to add a much more curated set of potentially interesting queries.
+**imdb-queries2.malloy**: Extends the base model to add a much more curated set of potentially interesting queries. The movies2 source includes full indexing for field/value search.
 
 # Building the parquet files
 
