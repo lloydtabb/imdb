@@ -190,7 +190,7 @@ source: movies2 is movies + {
       genres.value, 
       principals.people.primaryName, 
       primaryTitle,
-      principals.people.category,
+      principals.category,
       principals.characters.value 
       by total_ratings
   }
