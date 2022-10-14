@@ -41,23 +41,6 @@ For each year, the number of titles plus `by_genre` nested to show the breakdown
 Produces a rich dashboard for each title, ordered by production year. Generally used with a filter.
 
 
-
-**by_title** - title, start year, and number of ratings received, ordered by number of ratings.
-
-**by_year** - the number of titles produced per year
-
-**by_name** - for each person, the overall number of ratings on titles they were in, and the count of titles.
-
-**by_job_category** - job category by number of titles
-
-**by_genre** - for each genre, the count of titles, and percent of all titles that are this genre. Note that a film may have multiple genres.
-
-**by_character** - number of titles for each character name
-
-**by_year_and_genre** - for each year, the number of titles plus `by_genre` nested to show the breakdown by genre.
-
-**titles_dashboard** - produces a rich dashboard for each title, ordered by production year. Generally used with a filter.
-
 ## Included Files
 
 **imdb.malloy**: This is the base model. It names the three tables used, defines relationships between them, and declares measures, dimensions and queries to be used for analysis.
