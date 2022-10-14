@@ -30,6 +30,8 @@ For personal / educational use only.
 
 **by_year_and_genre** - for each year, the number of titles plus `by_genre` nested to show the breakdown by genre.
 
+**titles_dashboard** - produces a rich dashboard for each title, ordered by production year. Generally used with a filter.
+
 ## Included Files
 
 **imdb.malloy**: This is the base model. It names the three tables used, defines relationships between them, and declares measures, dimensions and queries to be used for analysis.
