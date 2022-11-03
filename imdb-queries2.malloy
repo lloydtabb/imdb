@@ -27,6 +27,17 @@ source: movies2 is movies + {
     limit: 20 
   } 
 
+  query: search_index is {
+    index: 
+      genres.value, 
+      principals.people.primaryName, 
+      primaryTitle,
+      principals.category,
+      principals.characters.value 
+      by total_ratings
+  }
+}
+
   // // --
   // // Name: Top Directors and their 5 best movies
   // query: movies->by_name + {
@@ -185,13 +196,4 @@ source: movies2 is movies + {
   //   }
   // }
 
-  query: search_index is {
-    index: 
-      genres.value, 
-      principals.people.primaryName, 
-      primaryTitle,
-      principals.category,
-      principals.characters.value 
-      by total_ratings
-  }
-}
+
