@@ -15,3 +15,10 @@ Movies are made by teams of people.  Often these foks work together on multiple 
 
 ### <!--malloy-query model="imdb-queries2.malloy" source="movies2" query="who_played"--> `Who Played Batman?`
 We have characters we love.  Who has played *Batman* and what movies and when.  Let's take a look.
+
+## Title Dashboards
+Get full movie detail for different search terms
+
+### <!--malloy-query model="imdb-queries2.malloy" source="movies2" query="speilberg_dashboard"--> `Spielberg Movies`
+
+### <!--malloy-query model="imdb-queries2.malloy" source="movies2" query="batman_dashboard"--> `Batman Movies`
