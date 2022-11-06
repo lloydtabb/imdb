@@ -14,33 +14,6 @@ For personal / educational use only.
 **Principals** A mapping table between people and titles, principals links the cast/crew to the titles they worked on.
 
 
-## Queries in `imdb.malloy`
-
-### <!--malloy-query model="imdb-queries2.malloy" source="movies2" query="by_title"--> `by_title`
-Title, start year, and number of ratings received, ordered by number of ratings.
-
-### <!--malloy-query model="imdb-queries2.malloy" source="movies2" query="by_year"--> `by_year`
-The number of titles produced per year
-
-### <!--malloy-query model="imdb-queries2.malloy" source="movies2" query="by_name"--> `by_name`
-For each person, the overall number of ratings on titles they were in, and the count of titles.
-
-### <!--malloy-query model="imdb-queries2.malloy" source="movies2" query="by_job_category"--> `by_job_category`
-Job category by number of titles
-
-### <!--malloy-query model="imdb-queries2.malloy" source="movies2" query="by_genre"--> `by_genre`
-For each genre, the count of titles, and percent of all titles that are this genre. Note that a film may have multiple genres.
-
-### <!--malloy-query model="imdb-queries2.malloy" source="movies2" query="by_character"--> `by_character`
-Number of titles for each character name
-
-### <!--malloy-query model="imdb-queries2.malloy" source="movies2" query="by_year_and_genre"--> `by_year_and_genre`
-For each year, the number of titles plus `by_genre` nested to show the breakdown by genre.
-
-### <!--malloy-query model="imdb-queries2.malloy" source="movies2" query="titles_dashboard"--> `titles_dashboard`
-Produces a rich dashboard for each title, ordered by production year. Generally used with a filter.
-
-
 ## Included Files
 
 **imdb.malloy**: This is the base model. It names the three tables used, defines relationships between them, and declares measures, dimensions and queries to be used for analysis.

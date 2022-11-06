@@ -1,7 +1,140 @@
-import "imdb.malloy"
+// import "imdb.malloy"
 
+
+source: people is table('duckdb:names.parquet') {
+// cast, crew, everyone involved in movies
+  primary_key: nconst
+}
+
+source: principals is table('duckdb:principals.parquet') {
+// a mapping table that links people to movies, along with their job on that movie.
+  join_one: people is people on nconst = people.nconst
+}
+
+source: movies is table('duckdb:titles.parquet') + {
+// all the movies
+  join_many: principals on tconst = principals.tconst
+  primary_key: tconst
+
+  declare:
+    title_count is count(distinct tconst)
+    row_count is count()
+    total_ratings is sum(ratings.numVotes/1000.0)
+    average_rating is ratings.averageRating.avg()
+    percent_of_titles is title_count/all(title_count)* 100
+
+    movie_image is concat('https://artifacts.flyxit.com/flyx-artifacts/',tconst,'.jpg')
+    movie_url is concat('https://www.imdb.com/title/',tconst)
+
+
+  query: by_title is {
+    group_by: primaryTitle, startYear, ratings.numVotes
+    order_by: 3 desc
+  }
+  query: by_year is {
+    group_by: startYear
+    aggregate: title_count
+    order_by: startYear desc
+  }
+
+  query: by_name is {
+    group_by:
+      principals.people.primaryName, principals.nconst
+    aggregate:
+      total_ratings
+      title_count
+  }
+  query: by_job_category is {
+    group_by: job_category is principals.category
+    aggregate: title_count
+  }
+
+  query: by_genre is {
+    group_by: genre is genres.value
+    aggregate: 
+      title_count, 
+      total_ratings
+      percent_of_titles is title_count/all(title_count)* 100
+
+  }
+  query: by_character is {
+    group_by: principals.characters.value
+    aggregate: title_count
+  }
+
+  query: by_year_and_genre is by_year + {
+    nest: by_genre
+  }
+
+  query: titles_dashboard is {
+    group_by: 
+      movie_image
+      production_year is startYear
+      primaryTitle
+      runtimeMinutes
+      movie_url 
+    nest:
+      genre_list is by_genre
+      by_cast is by_job_category {
+        nest: by_name_list is by_name + {limit: 200}
+      }
+    limit: 20
+    order_by: 2 desc
+  }
+}
 source: movies2 is movies + {
+  join_many: search is from(movies->{
+    group_by: 
+      tconst
+      principals.people.primaryName
+      genre is genres.value
+  }) on tconst = search.tconst
   // --
+
+  query: top_rated_by_genre is  {
+    group_by: genre is genres.value
+    aggregate: total_ratings
+    nest: top_titles is by_title + { limit: 5 } 
+    nest: top_names is by_name + { limit: 5 }
+  }
+
+  query: genre_crossproduct is {
+    where: search.genre = 'Comedy'
+    group_by: 
+      search.genre
+      genre2 is genres.value
+    aggregate: total_ratings
+    nest:  top_titles is by_title + { limit: 5 } 
+    order_by: 1,2
+  }
+
+  query: who_works_with_who is {
+    where: search.primaryName = 'Steven Spielberg'
+    where: search.primaryName != principals.people.primaryName
+    group_by: principals.people.primaryName
+    aggregate: 
+      title_count
+      start_year is min(startYear)
+      end_year is max(startYear)
+    nest: by_job_category_list is by_job_category
+    nest: top_titles_list is by_title
+    order_by: title_count desc, end_year desc
+    limit: 100
+  }
+  
+  query: who_played is {
+    where: principals.characters.value ~r'Batman'
+    group_by: principals.people.primaryName
+    aggregate: 
+      title_count
+      start_year is min(startYear)
+      end_year is max(startYear)
+    nest: top_titles_list is by_title
+    order_by: end_year desc
+    limit: 100
+  }
+  
+
   // Name: Top Titles
   query: top_titles is by_title + { limit: 20 } 
 
