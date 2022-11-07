@@ -6,9 +6,9 @@ For personal / educational use only.
 
 ## What is this?
 
-This data model is written in [Malloy](https://github.com/looker-open-source/malloy/), see the [Malloy source code](imdb-queries2.malloy?foo.txt), source for [this document](composer.md), the [configuration](composer.json), or the [repository](https://github.com/lloydtabb/imdb_fiddle/) on Github.
+[Malloy Composer](https://github.com/malloydata/malloy-composer) is an open source tool for viewing and exploring data sets.  Data models are created in the  [Malloy](https://github.com/looker-open-source/malloy/) language.  Data can be served from a simple webserver or from a SQL database.
 
-Source code for this data set can be found on [Github: lloydtabb/imdb_fiddle](https://github.com/lloydtabb/imdb_fiddle)
+See the [Malloy source code](https://github.com/lloydtabb/imdb_fiddle/blob/main/imdb-queries2.malloy) for this data set, source for [this document](https://github.com/lloydtabb/imdb_fiddle/blob/main/composer.md), the [configuration](https://github.com/lloydtabb/imdb_fiddle/blob/main/composer.json).
 
 
 ## Queries
@@ -33,10 +33,9 @@ Get full movie detail for different search terms
 
 ### <!--malloy-query model="imdb-queries2.malloy" source="movies2" query="batman_dashboard"--> `Batman Movies`
 
-## About Malloy Composer
+## More About Malloy Composer
 
-Composer is implemented using Malloy, DuckDB and WASM and runs completely
-in your browser.  Javascript code is compled from here:
+This composer is implemented using Malloy, DuckDB and WASM and runs completely in your browser.  Javascript code is compled from here:
 
   https://github.com/malloydata/malloy-composer
   
