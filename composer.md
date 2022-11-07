@@ -6,7 +6,7 @@ For personal / educational use only.
 
 ## What is this?
 
-This data model is written in [Malloy](https://github.com/looker-open-source/malloy/), see the [Malloy source code](imdb-queries2.malloy), source for [this document](composer.md), the [configuration](composer.json), or the [repository](https://github.com/lloydtabb/imdb_fiddle/) on Github.
+This data model is written in [Malloy](https://github.com/looker-open-source/malloy/), see the [Malloy source code](imdb-queries2.malloy?foo.txt), source for [this document](composer.md), the [configuration](composer.json), or the [repository](https://github.com/lloydtabb/imdb_fiddle/) on Github.
 
 Source code for this data set can be found on [Github: lloydtabb/imdb_fiddle](https://github.com/lloydtabb/imdb_fiddle)
 
