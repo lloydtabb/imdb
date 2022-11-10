@@ -8,7 +8,7 @@ For personal / educational use only.
 
 [Malloy Composer](https://github.com/malloydata/malloy-composer) is an open source tool for viewing and exploring data sets.  Data models are created in the  [Malloy](https://github.com/looker-open-source/malloy/) language.  Data can be served from a simple webserver or from a SQL database.
 
-See the 150 lines of [Malloy source code](https://github.com/lloydtabb/imdb_fiddle/blob/main/imdb-queries2.malloy) for this data set, source for [this document](https://github.com/lloydtabb/imdb_fiddle/blob/main/composer.md), the [configuration](https://github.com/lloydtabb/imdb_fiddle/blob/main/composer.json).
+See the **150 lines of [Malloy source code](https://github.com/lloydtabb/imdb_fiddle/blob/main/imdb-queries2.malloy)** for this data set, source for [this document](https://github.com/lloydtabb/imdb_fiddle/blob/main/composer.md), the [configuration](https://github.com/lloydtabb/imdb_fiddle/blob/main/composer.json).
 
 
 ## Queries
@@ -60,6 +60,7 @@ Get full movie detail for different search terms
 <!-- malloy-query  
   name="Spielberg Movies"
   model="IMDB"
+  renderer="dashboard"
 -->
 ```malloy
   query: movies2-> titles_dashboard + {
@@ -70,6 +71,7 @@ Get full movie detail for different search terms
 <!-- malloy-query  
   name="Batman Movies"
   model="IMDB"
+  renderer="dashboard"
 -->
 ```malloy
   query: movies2 -> titles_dashboard + {

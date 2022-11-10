@@ -1,6 +1,3 @@
-// import "imdb.malloy"
-
-
 source: people is table('duckdb:names.parquet') {
 // cast, crew, everyone involved in movies
   primary_key: nconst
