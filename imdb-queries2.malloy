@@ -94,14 +94,6 @@ source: movies2 is movies + {
       job is principals.category
   }) on tconst = search.tconst
   // --
-
-  query: top_rated_by_genre is  {
-    group_by: genre is genres.value
-    aggregate: total_ratings
-    nest: top_titles is by_title + { limit: 5 } 
-    nest: top_names is by_name + { limit: 5 }
-  }
-
   query: genre_crossproduct is {
     where: search.genre = 'Comedy'
     group_by: 
@@ -136,14 +128,6 @@ source: movies2 is movies + {
     nest: top_titles_list is by_title
     order_by: end_year desc
     limit: 100
-  }
-
-  query: speilberg_dashboard is titles_dashboard + {
-    where: search.primaryName = 'Steven Spielberg'
-  }
-
-  query: batman_dashboard is titles_dashboard + {
-    where: search.character = 'Batman'
   }
 
   query: search_index is {

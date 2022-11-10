@@ -1,8 +1,10 @@
-[
-  {
-    "name": "IMDB",
-    "dataTables": ["names.parquet","principals.parquet","titles.parquet"],
-    "modelPath": "./imdb-queries2.malloy",
-    "readme": "./composer.md"
-  }
-]
+{
+  "datasets": [
+    {
+      "name": "IMDB",
+      "tables": ["names.parquet","principals.parquet","titles.parquet"],
+      "model": "./imdb-queries2.malloy",
+      "readme": "./composer.md"
+    }
+  ]
+}

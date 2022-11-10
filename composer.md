@@ -8,30 +8,74 @@ For personal / educational use only.
 
 [Malloy Composer](https://github.com/malloydata/malloy-composer) is an open source tool for viewing and exploring data sets.  Data models are created in the  [Malloy](https://github.com/looker-open-source/malloy/) language.  Data can be served from a simple webserver or from a SQL database.
 
-See the [Malloy source code](https://github.com/lloydtabb/imdb_fiddle/blob/main/imdb-queries2.malloy) for this data set, source for [this document](https://github.com/lloydtabb/imdb_fiddle/blob/main/composer.md), the [configuration](https://github.com/lloydtabb/imdb_fiddle/blob/main/composer.json).
+See the 150 lines of [Malloy source code](https://github.com/lloydtabb/imdb_fiddle/blob/main/imdb-queries2.malloy) for this data set, source for [this document](https://github.com/lloydtabb/imdb_fiddle/blob/main/composer.md), the [configuration](https://github.com/lloydtabb/imdb_fiddle/blob/main/composer.json).
 
 
 ## Queries
 
-### <!--malloy-query model="imdb-queries2.malloy" source="movies2" query="top_rated_by_genre"--> `Top Rated Movies by Genre`
-For each movie genre show the top movies and the top people that work within those genres.
+<!-- malloy-query  
+  name="Top Rated Movies and Individuals by Genre"
+  description="For each movie genre show the top movies and the top people that work within those genres." 
+  model="IMDB"
+-->
+```malloy
+query: movies2-> {
+  group_by: genre is genres.value
+  aggregate: total_ratings
+  nest: top_titles is by_title + { limit: 5 } 
+  nest: top_names is by_name + { limit: 5 }
+}
+```
 
-### <!--malloy-query model="imdb-queries2.malloy" source="movies2" query="genre_crossproduct"--> `Genre Cross Product`
-Movies can have multiple genres.  Looking at cross product of these is really interesting.  What are the most popular movies in each genre combination?  *Comedy+Western?* -> *"Blazing Saddles"*.  *Comedy+SciFi?* -> *"Back to the future"*.  Investigate all possible genre combinations.
+<!-- malloy-query  
+  name="Genre Cross Products - Comedy + ??"
+  description="Movies can have multiple genres.  Looking at cross product of these is really interesting.  What are the most popular movies in each genre combination?"
+  model="IMDB"
+-->
+```malloy
+query: movies2->genre_crossproduct
+```
 
-### <!--malloy-query model="imdb-queries2.malloy" source="movies2" query="who_works_with_who"--> `Who Works with Who?`
-Movies are made by teams of people.  Often these foks work together on multiple projects.  Let's examine the teams behind the popular names.  We'll start with Steven Speileberg.  Who does he work with and when?
+<!-- malloy-query  
+  name="Who Works With Who?"
+  description="Movies are made by teams of people.  Often these foks work together on multiple projects.  Let's examine the teams behind the popular names.  We'll start with Steven Speileberg.  Who does he work with and when?" 
+  model="IMDB"
+-->
+```malloy
+query: movies2-> who_works_with_who
+```
 
-
-### <!--malloy-query model="imdb-queries2.malloy" source="movies2" query="who_played"--> `Who Played Batman?`
-We have characters we love.  Who has played *Batman* and what movies and when.  Let's take a look.
+<!-- malloy-query  
+  name="Who Played Batman?"
+  description="We have characters we love.  Who has played *Batman* and what movies and when.  Let's take a look." 
+  model="IMDB"
+-->
+```malloy
+query: movies2-> who_played
+```
 
 ## Title Dashboards
 Get full movie detail for different search terms
 
-### <!--malloy-query model="imdb-queries2.malloy" source="movies2" query="speilberg_dashboard"--> `Spielberg Movies`
+<!-- malloy-query  
+  name="Spielberg Movies"
+  model="IMDB"
+-->
+```malloy
+  query: movies2-> titles_dashboard + {
+    where: search.primaryName = 'Steven Spielberg'
+  }
+```
 
-### <!--malloy-query model="imdb-queries2.malloy" source="movies2" query="batman_dashboard"--> `Batman Movies`
+<!-- malloy-query  
+  name="Batman Movies"
+  model="IMDB"
+-->
+```malloy
+  query: movies2 -> titles_dashboard + {
+    where: search.character = 'Batman'
+  }
+```
 
 ## More About Malloy Composer
 
