@@ -16,7 +16,7 @@ See the **150 lines of [Malloy source code](https://github.com/lloydtabb/imdb_fi
 <!-- malloy-query  
   name="Top Rated Movies and Individuals by Genre"
   description="For each movie genre show the top movies and the top people that work within those genres." 
-  model="IMDB"
+  model="imdb-queries2.malloy" 
 -->
 ```malloy
 query: movies2-> {
@@ -30,7 +30,7 @@ query: movies2-> {
 <!-- malloy-query  
   name="Genre Cross Products - Comedy + ??"
   description="Movies can have multiple genres.  Looking at cross product of these is really interesting.  What are the most popular movies in each genre combination?"
-  model="IMDB"
+  model="imdb-queries2.malloy"
 -->
 ```malloy
 query: movies2->genre_crossproduct
@@ -39,7 +39,7 @@ query: movies2->genre_crossproduct
 <!-- malloy-query  
   name="Who Works With Who?"
   description="Movies are made by teams of people.  Often these foks work together on multiple projects.  Let's examine the teams behind the popular names.  We'll start with Steven Speileberg.  Who does he work with and when?" 
-  model="IMDB"
+  model="imdb-queries2.malloy"
 -->
 ```malloy
 query: movies2-> who_works_with_who
@@ -48,7 +48,7 @@ query: movies2-> who_works_with_who
 <!-- malloy-query  
   name="Who Played Batman?"
   description="We have characters we love.  Who has played *Batman* and what movies and when.  Let's take a look." 
-  model="IMDB"
+  model="imdb-queries2.malloy"
 -->
 ```malloy
 query: movies2-> who_played
@@ -59,7 +59,7 @@ Get full movie detail for different search terms
 
 <!-- malloy-query  
   name="Spielberg Movies"
-  model="IMDB"
+  model="imdb-queries2.malloy"
   renderer="dashboard"
 -->
 ```malloy
@@ -70,7 +70,7 @@ Get full movie detail for different search terms
 
 <!-- malloy-query  
   name="Batman Movies"
-  model="IMDB"
+  model="imdb-queries2.malloy"
   renderer="dashboard"
 -->
 ```malloy
