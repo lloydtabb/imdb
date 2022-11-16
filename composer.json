@@ -4,7 +4,7 @@
   "models": [
     {
       "id": "movies2",
-      "modelPath": "./imdb-queries2.malloy",
+      "path": "./imdb-queries2.malloy",
       "tables": ["names.parquet","principals.parquet","titles.parquet"]
     }
   ]
