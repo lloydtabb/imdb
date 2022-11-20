@@ -6,6 +6,11 @@
       "id": "movies2",
       "path": "./imdb-queries2.malloy",
       "tables": ["names.parquet","principals.parquet","titles.parquet"]
+    },
+    {
+      "id": "movies-simple",
+      "path": "./imdb-simple.malloy",
+      "tables": ["names.parquet","principals.parquet","titles.parquet"]
     }
   ]
 }

@@ -27,6 +27,7 @@ source: movies is table('duckdb:titles.parquet') + {
   query: by_title is {
     group_by: primaryTitle, startYear, ratings.numVotes
     order_by: 3 desc
+    limit: 20
   }
   query: by_year is {
     group_by: startYear
@@ -40,6 +41,7 @@ source: movies is table('duckdb:titles.parquet') + {
     aggregate:
       total_ratings
       title_count
+    limit: 20
   }
   query: by_job_category is {
     group_by: job_category is principals.category
@@ -57,6 +59,7 @@ source: movies is table('duckdb:titles.parquet') + {
   query: by_character is {
     group_by: principals.characters.value
     aggregate: title_count
+    limit: 10
   }
 
   query: by_year_and_genre is by_year + {

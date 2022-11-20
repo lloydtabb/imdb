@@ -1,0 +1,75 @@
+source: people is table('duckdb:names.parquet') {
+// cast, crew, everyone involved in movies
+  primary_key: nconst
+}
+
+source: principals is table('duckdb:principals.parquet') {
+// a mapping table that links people to movies, along with their job on that movie.
+  join_one: people is people on nconst = people.nconst
+}
+
+source: movies is table('duckdb:titles.parquet') + {
+// all the movies
+  join_many: principals on tconst = principals.tconst
+  primary_key: tconst
+
+  rename:     
+    title is primaryTitle
+
+  dimension:
+    // make some short cuts to the common dimensions
+    character is principals.characters.value
+    person is principals.people.primaryName
+    person_id is principals.nconst
+    job is principals.category
+    votes is ratings.numVotes
+    genre is genres.value
+
+  measure:
+    title_count is count(distinct tconst)
+    row_count is count()
+    person_count is count(distinct person_id)
+    total_votes is sum(ratings.numVotes/1000.0)
+    average_rating is ratings.averageRating.avg()
+    percent_of_titles is title_count/all(title_count)* 100
+
+  query: top_titles is {
+    group_by: title, startYear, votes
+    order_by: 3 desc
+    limit: 10
+  }
+
+  query: by_year is {
+    group_by: startYear
+    aggregate: title_count
+    order_by: startYear desc
+    limit: 10000
+  }
+
+  query: top_people is {
+    group_by:
+      person, person_id
+    aggregate:
+      total_votes
+      title_count
+    limit: 10
+  }
+  query: by_job is {
+    group_by: job
+    aggregate: title_count
+  }
+
+  query: by_genre is {
+    group_by: genre
+    aggregate: 
+      title_count
+      total_votes
+      percent_of_titles
+
+  }
+  query: top_characters is {
+    group_by: character
+    aggregate: title_count
+    limit: 10
+  }
+}

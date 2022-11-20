@@ -10,7 +10,6 @@ For personal / educational use only.
 
 See the **150 lines of [Malloy source code](https://github.com/lloydtabb/imdb_fiddle/blob/main/imdb-queries2.malloy)** for this data set, source for [this document](https://github.com/lloydtabb/imdb_fiddle/blob/main/composer.md), the [configuration](https://github.com/lloydtabb/imdb_fiddle/blob/main/composer.json).
 
-
 ## Queries
 
 <!-- malloy-query  
@@ -78,6 +77,22 @@ Get full movie detail for different search terms
     where: search.character = 'Batman'
   }
 ```
+
+## Explore Data Directly
+
+<!-- malloy-source  
+  title="IMDB"
+  model="imdb-queries2.malloy"
+  source="movies"
+  description="Explore the full IMDB Model"
+-->
+
+<!-- malloy-source  
+  title="Simplified IMDB"
+  model="imdb-simple.malloy"
+  source="movies"
+  description="Explore the simplified IMDB Model"
+-->
 
 ## More About Malloy Composer
 
