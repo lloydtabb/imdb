@@ -6,17 +6,17 @@
 //  About Fiddles: https://github.com/lloydtabb/malloy_fiddle_dist/
 
 
-source: people is table('duckdb:names.parquet') {
+source: people is table('duckdb:https://lloydtabb.github.io/imdb_fiddle/names.parquet') {
 // cast, crew, everyone involved in movies
   primary_key: nconst
 }
 
-source: principals is table('duckdb:principals.parquet') {
+source: principals is table('duckdb:https://lloydtabb.github.io/imdb_fiddle/principals.parquet') {
 // a mapping table that links people to movies, along with their job on that movie.
   join_one: people is people on nconst = people.nconst
 }
 
-source: movies is table('duckdb:titles.parquet') + {
+source: movies is table('duckdb:https://lloydtabb.github.io/imdb_fiddle/titles.parquet') + {
 // all the movies
   join_many: principals on tconst = principals.tconst
   primary_key: tconst
