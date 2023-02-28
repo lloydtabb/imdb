@@ -1,0 +1,6 @@
+import "imdb.malloy"
+
+query: movies->by_title {
+  where: principals.people.primaryName ~ '%Hanks'
+  nest:  by_genre
+}
