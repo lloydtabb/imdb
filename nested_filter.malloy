@@ -1,0 +1,6 @@
+import "imdb.malloy"
+
+query: movies-> {
+  aggregate: title_count
+  where: genres.value = 'Drama'
+}
