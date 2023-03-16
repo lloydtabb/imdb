@@ -6,7 +6,7 @@ For personal / educational use only.
 
 ## What is this?
 
-[Malloy Composer](https://github.com/malloydata/malloy-composer) is an open source tool for viewing and exploring data sets.  Data models are created in the  [Malloy](https://github.com/looker-open-source/malloy/) language.  Data can be served from a simple webserver or from a SQL database.
+[Malloy Composer](https://github.com/malloydata/malloy-composer) is an open source tool for viewing and exploring data sets.  Data models are created in the  [Malloy](https://github.com/malloydata/malloy/) language.  Data can be served from a simple webserver or from a SQL database.
 
 See the **150 lines of [Malloy source code](https://github.com/lloydtabb/imdb_fiddle/blob/main/imdb-queries2.malloy)** for this data set, source for [this document](https://github.com/lloydtabb/imdb_fiddle/blob/main/composer.md), the [configuration](https://github.com/lloydtabb/imdb_fiddle/blob/main/composer.json).
 
@@ -24,7 +24,7 @@ query: movies2-> {
   nest: top_titles is by_title + { limit: 5 } 
   nest: top_names is by_name + { limit: 5 }
 }
-```
+``` 
 
 <!-- malloy-query  
   name="Genre Cross Products - Comedy + ??"

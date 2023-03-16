@@ -96,12 +96,13 @@ source: movies2 is movies + {
   // --
   query: genre_crossproduct is {
     where: search.genre = 'Comedy'
+      and genres.value != 'Comedy'
     group_by: 
       search.genre
       genre2 is genres.value
     aggregate: total_ratings
     nest:  top_titles is by_title + { limit: 5 } 
-    order_by: 1,2
+    order_by: total_ratings desc
   }
 
   query: who_works_with_who is {
