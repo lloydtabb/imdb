@@ -1,0 +1,206 @@
+[
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "# IMDB Analysis in Malloy\n",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "import \"imdb.malloy\"",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "## Top titles\n",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "query: movies->by_title + { limit: 20 } ",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "## Top 20 horror movies\n",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "query: movies-> by_title + { \n  where: genres.value = 'Horror'\n  limit: 20\n}",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "\n## Top Stars\n",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "query: movies->by_name + { \n  limit: 20 \n} ",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "## Top Comedy Stars\n",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "query: movies->by_name + { \n  where: genres.value = 'Comedy'\n  limit: 20 \n} ",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "## Movie Stars Titles time and jobs\n",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "query: movies-> {\n  where: ratings.numVotes > 50000 \n  nest: star_dashboard is by_name + { \n    nest: \n      by_title + { limit: 5}\n      by_year_line_chart is by_year\n      by_job_category\n    limit: 20 \n  }\n} ",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "## Comedy Movie Stars Titles time and jobs",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "query: movies-> {\n  where: genres.value = 'Comedy'\n  nest: star_dashboard is by_name + { \n    nest: \n      by_title + { limit: 5}\n      by_year_line_chart is by_year\n      by_job_category\n    limit: 20 \n  }\n} ",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "## Top Directors and their 5 best movies",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "query: movies->by_name + {\n  where: principals.category = 'director'\n  nest: by_title + { limit: 5}\n}",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "## Top comedy directors and their 5 best movies",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "query: movies->by_name + {\n  where: principals.category = 'director', genres.value = 'Comedy'\n  nest: by_title + { limit: 5}\n}",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "## By Genre, top movies, directors and actors\n",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "query: movies-> by_genre + {\n  nest: by_title + { limit: 5}\n  nest: by_director is by_name + {\n    where: principals.category = 'director'\n    limit: 5\n  }\n  nest: by_actor is by_name + {\n    where: principals.category ~ 'act%'\n    limit: 5\n  }\n}",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "## Steven Spielberg Movies",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "\nquery:  movies-> by_title + {\n  where: principals.people.primaryName ~ r'Steven Spielberg'\n  limit: 40\n}",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "## People that work with Steven Spielberg ",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "query: speiberg_movies is movies->{\n  where: principals.people.primaryName ~ r'Steven Spielberg'\n  group_by: tconst, principals.people.nconst\n}\nquery: movies -> by_name + {\n  join_one: x is from(->speiberg_movies) on x.tconst=tconst\n  where: x.tconst != null\n\n  where: principals.people.nconst != x.nconst\n  limit: 20\n  order_by: title_count desc\n  nest: by_job_list is by_job_category\n  nest: title_list is by_title\n}",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "## Horror Genre combinations",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "// Get a list of horror Movies\nquery: horror_movies is movies->{\n  where: genres.value = 'Horror'\n  group_by: tconst\n}\n\n// Horror combinations.\nquery: movies -> {\n  join_one: x is from(->horror_movies) with tconst\n  where: x.tconst != null\n\n  group_by: genre_combo is concat('Horror + ', genres.value)\n  aggregate: title_count, percent_of_titles\n  nest: by_title is {\n    group_by: primaryTitle, ratings.numVotes\n    order_by: 2 desc\n    limit: 10\n  }\n}\n",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "## Star Trek Dashboard",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "\nquery: movies -> {   \n  where: primaryTitle ~ r'Star Trek' and startYear < 2020\n  nest: titles_dashboard\n}\n",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "## Steven Spielberg Dashboard",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "\nquery: speiberg_movies is movies->{\n  where: principals.people.primaryName ~ r'Steven Spielberg'\n  group_by: tconst\n}\n\nquery: movies -> { \n  join_one: x is from(->speiberg_movies) with tconst\n  where: x.tconst != null\n  nest: titles_dashboard\n}\n",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "## Tom Hanks explored",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "\nquery: tom_hanks_movies is movies->{\n  where: principals.people.primaryName ~ r'Tom Hanks'\n  group_by: tconst\n}\nquery: movies -> {\n  join_one: x is from(-> tom_hanks_movies) with tconst\n  where: x.tconst != null and startYear < 2010\n\n  nest: tom_dashboard is {\n    nest: works_with is by_name + {\n      nest: by_role_list is by_job_category\n      limit: 10\n      order_by: 4 desc\n    }\n    nest: title_list_detail is  {\n      group_by: primaryTitle, startYear\n      order_by: 2 desc\n    }\n    nest: by_genre_bar_chart is {\n      where: startYear != null\n      group_by: genres.value\n      aggregate: title_count\n      aggregate: avg_year is startYear.avg()\n    }\n    nest: titles_dashboard\n  }\n}\n",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "## Genre matrix Top Movies",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "// Genre - Genre, by number of votes\nquery: movies + {\n  join_many: x is from( movies-> {\n    group_by: tconst, genres.value\n  } ) on tconst = x.tconst\n}\n->  {\n  where: genres.value != x.value\n  group_by: genre1 is genres.value\n  aggregate:  title_count\n  nest: genre is {\n    group_by: genre2 is x.value\n    nest: by_title_list is {\n      group_by: primaryTitle, ratings.numVotes\n      order_by: 2 desc\n      limit: 10\n    }\n  }\n}",
+    "metadata": {}
+  }
+]

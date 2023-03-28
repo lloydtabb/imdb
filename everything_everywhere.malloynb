@@ -1,1 +1,0 @@
-[{"kind":2,"language":"malloy","value":"import \"imdb.malloy\"\n\nquery: movies->titles_dashboard +{ \n  where: primaryTitle ~ 'Everything Every%'\n}\n\n// !-- style dashboard"}]
