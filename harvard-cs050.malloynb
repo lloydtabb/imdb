@@ -8,7 +8,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "source: people is table('duckdb:names.parquet')\nsource: principals is table('duckdb:principals.parquet') {\n  join_one: people is people on nconst = people.nconst\n}\nsource: movies is table('duckdb:titles.parquet') + {\n  join_many: principals on tconst = principals.tconst\n  measure:\n    title_count is count() \n}",
+    "value": "source: people is table('duckdb:data/names.parquet')\nsource: principals is table('duckdb:data/principals.parquet') {\n  join_one: people is people on nconst = people.nconst\n}\nsource: movies is table('duckdb:data/titles.parquet') + {\n  join_many: principals on tconst = principals.tconst\n  measure:\n    title_count is count() \n}",
     "metadata": {}
   },
   {

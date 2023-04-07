@@ -1,0 +1,50 @@
+[
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "# Steven Spielberg\nWhat did he direct? When? Who does he commonly work with and on what?",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "import \"imdb.malloy\"",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "## Steven Spielberg movies",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "query:  movies-> by_title + {\n  where: principals.people.primaryName ~ r'Steven Spielberg'\n  limit: 40\n}",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "## People that work with Steven Spielberg ",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "query: speiberg_movies is movies->{\n  where: principals.people.primaryName ~ r'Steven Spielberg'\n  group_by: tconst, principals.people.nconst\n}\nquery: movies -> by_name + {\n  join_one: x is from(->speiberg_movies) on x.tconst=tconst\n  where: x.tconst != null\n  where: principals.people.nconst != x.nconst\n  aggregate: `years` is concat(min(startYear)::string, \n      '-', max(startYear)::string)\n  limit: 20\n  order_by: title_count desc\n  nest: by_job_list is by_job_category\n  nest: title_list is by_title\n}",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "## Steven Spielberg dashboard",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "\nquery: speiberg_movies is movies->{\n  where: principals.people.primaryName ~ r'Steven Spielberg'\n  group_by: tconst\n}\n\nquery: movies -> { \n  join_one: x is from(->speiberg_movies) with tconst\n  where: x.tconst != null\n  nest: titles_dashboard\n}\n",
+    "metadata": {}
+  }
+]
