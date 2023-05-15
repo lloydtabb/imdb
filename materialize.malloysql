@@ -1,0 +1,4 @@
+--! connection: duckdb
+--! import: "imdb.malloy"
+
+SELECT 1

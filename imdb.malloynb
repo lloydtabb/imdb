@@ -20,7 +20,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: movies->by_title + { limit: 20 } ",
+    "value": "query: movies->by_title add { limit: 20 } ",
     "metadata": {}
   },
   {
@@ -32,7 +32,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: movies-> by_title + { \n  where: genres.value = 'Horror'\n  limit: 20\n}",
+    "value": "query: movies-> by_title add { \n  where: genres.value = 'Horror'\n  limit: 20\n}",
     "metadata": {}
   },
   {
@@ -44,7 +44,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: movies->by_name + { \n  limit: 20 \n} ",
+    "value": "query: movies->by_name add { \n  limit: 20 \n} ",
     "metadata": {}
   },
   {
@@ -56,7 +56,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: movies->by_name + { \n  where: genres.value = 'Comedy'\n  limit: 20 \n} ",
+    "value": "query: movies->by_name add { \n  where: genres.value = 'Comedy'\n  limit: 20 \n} ",
     "metadata": {}
   }
 ]
