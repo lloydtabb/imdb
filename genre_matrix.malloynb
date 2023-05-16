@@ -20,7 +20,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: movies + {\n  join_many: x is from( movies-> {\n    group_by: tconst, genres.value\n  } ) on tconst = x.tconst\n}\n->  {\n  where: genres.value != x.value\n  group_by: genre1 is genres.value\n  aggregate:  title_count\n  nest: genre is {\n    group_by: \n      genre1 is genres.value\n      genre2 is x.value\n    nest: by_title_list is {\n      group_by: primaryTitle, ratings.numVotes\n      order_by: 2 desc\n      limit: 10\n    }\n  }\n}",
+    "value": "run: movies def {\n  join_many: x is from( movies-> {\n    group_by: tconst, genres.value\n  } ) on tconst = x.tconst\n}\n->  {\n  where: genres.value != x.value\n  group_by: genre1 is genres.value\n  aggregate:  title_count\n  nest: genre is {\n    group_by: \n      genre1 is genres.value\n      genre2 is x.value\n    nest: by_title_list is {\n      group_by: primaryTitle, ratings.numVotes\n      order_by: 2 desc\n      limit: 10\n    }\n  }\n}",
     "metadata": {}
   }
 ]

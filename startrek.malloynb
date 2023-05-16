@@ -14,7 +14,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: movies -> {   \n  where: primaryTitle ~ r'Star Trek' and startYear < 2020\n  nest: titles_dashboard\n}",
+    "value": "run: movies -> {   \n  where: primaryTitle ~ r'Star Trek' and startYear < 2020\n  nest: titles_dashboard\n}",
     "metadata": {}
   }
 ]

@@ -6,17 +6,17 @@
 //  About Fiddles: https://github.com/lloydtabb/malloy_fiddle_dist/
 
 
-source: people is duckdb.table('data/names.parquet') with {
+source: people is duckdb.table('data/names.parquet') def {
 // cast, crew, everyone involved in movies
   primary_key: nconst
 }
 
-source: principals is duckdb.table('data/principals.parquet') with {
+source: principals is duckdb.table('data/principals.parquet') def {
 // a mapping table that links people to movies, along with their job on that movie.
   join_one: people is people on nconst = people.nconst
 }
 
-source: movies is duckdb.table('data/titles.parquet') + {
+source: movies is duckdb.table('data/titles.parquet') def {
 // all the movies
   join_many: principals on tconst = principals.tconst
   primary_key: tconst
@@ -68,7 +68,7 @@ source: movies is duckdb.table('data/titles.parquet') + {
     aggregate: title_count
   }
 
-  query: by_year_and_genre is by_year add {
+  query: by_year_and_genre is by_year mod {
     nest: by_genre
   }
 
@@ -82,7 +82,7 @@ source: movies is duckdb.table('data/titles.parquet') + {
     nest:
       genre_list is by_genre
       by_cast is by_job_category {
-        nest: by_name_list is by_name add {limit: 200}
+        nest: by_name_list is by_name mod {limit: 200}
       }
     limit: 20
     order_by: 2 desc

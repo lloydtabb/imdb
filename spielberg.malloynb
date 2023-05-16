@@ -20,7 +20,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "run:  movies-> by_title add {\n  where: principals.people.primaryName ~ r'Steven Spielberg'\n  limit: 40\n}",
+    "value": "run:  movies-> by_title mod {\n  where: principals.people.primaryName ~ r'Steven Spielberg'\n  limit: 40\n}",
     "metadata": {}
   },
   {
@@ -32,13 +32,13 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: speiberg_movies is movies-> {\n  where: principals.people.primaryName ~ r'Steven Spielberg'\n  group_by: tconst, principals.people.nconst\n}\nrun: movies \n  with {\n    join_one: x is speiberg_movies on x.tconst=tconst\n    where: x.tconst != null\n  }\n  -> by_name add {\n    where: principals.people.nconst != x.nconst\n    aggregate: `years` is concat(min(startYear)::string, \n        '-', max(startYear)::string)\n    limit: 20\n    order_by: title_count desc\n    nest: by_job_list is with { ... } by_job_category add {..}\n    nest: title_list is by_title\n  }",
+    "value": "query: speiberg_movies is movies-> {\n  where: principals.people.primaryName ~ r'Steven Spielberg'\n  group_by: tconst, principals.people.nconst\n}\nrun: movies \n  def {\n    join_one: x is speiberg_movies on x.tconst=tconst\n    where: x.tconst != null\n  }\n  -> by_name mod {\n    where: principals.people.nconst != x.nconst\n    aggregate: `years` is concat(min(startYear)::string, \n        '-', max(startYear)::string)\n    limit: 20\n    order_by: title_count desc\n    nest: by_job_list is with { ... } by_job_category add {..}\n    nest: title_list is by_title\n  }",
     "metadata": {}
   },
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: speiberg_movies is movies ->{\n  where: principals.people.primaryName ~ r'Steven Spielberg'\n  group_by: tconst, principals.people.nconst\n}\n\nsource my_movies is movies with {\n\n  query: c is -> {\n    aggregate: title_count is count()\n  }\n\n  query: foo(a) is {aggregate: s.sum() } abstract\n\n  query: a_names is -> by_name add {\n    where: principals.people.primaryName ~ r'^A'\n  }\n\n  query: spielberge_stuff is \n    with {\n      join_one: x is speiberg_movies on x.tconst=tconst\n      where: x.tconst != null\n    } \n    -> by_name add {\n      where: principals.people.nconst != x.nconst\n      aggregate: `years` is concat(min(startYear)::string, \n          '-', max(startYear)::string)\n      limit: 20\n      order_by: title_count desc\n      nest: by_job_list is with { ... } -> by_job_category add {..}\n      nest: title_list is -> foo(x)\n      nest: c\n    }\n}",
+    "value": "query: speiberg_movies is movies -> {\n  where: principals.people.primaryName ~ r'Steven Spielberg'\n  group_by: tconst, principals.people.nconst\n}\n\nsource my_movies is movies def {\n\n  query: c is -> {\n    aggregate: title_count is count()\n  }\n\n  query: foo(a) is {aggregate: s.sum() } abstract\n\n  query: a_names is -> by_name mod {\n    where: principals.people.primaryName ~ r'^A'\n  }\n\n  query: spielberge_stuff is \n    def {\n      join_one: x is speiberg_movies on x.tconst=tconst\n      where: x.tconst != null\n    } \n    -> by_name mod {\n      where: principals.people.nconst != x.nconst\n      aggregate: `years` is concat(min(startYear)::string, \n          '-', max(startYear)::string)\n      limit: 20\n      order_by: title_count desc\n      nest: by_job_list is def { ... } -> by_job_category mod {..}\n      nest: title_list is -> foo(x)\n      nest: c\n    }\n}",
     "metadata": {}
   },
   {
@@ -50,7 +50,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "\nquery: speiberg_movies is movies->{\n  where: principals.people.primaryName ~ r'Steven Spielberg'\n  group_by: tconst\n}\n\nrun: movies with { \n  join_one: x is from(->speiberg_movies) with tconst\n  where: x.tconst != null\n}  .titles_dashboard\n  \n",
+    "value": "\nquery: speiberg_movies is movies -> {\n  where: principals.people.primaryName ~ r'Steven Spielberg'\n  group_by: tconst\n}\n\nrun: movies with { \n  join_one: x is speiberg_movies with tconst\n  where: x.tconst != null\n}  .titles_dashboard\n  \n",
     "metadata": {}
   }
 ]

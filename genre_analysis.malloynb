@@ -14,7 +14,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: movies-> {\n  where: startYear ? > 1940 & < 2020\n  group_by: genre is genres.value\n     aggregate: \n      title_count, \n      total_ratings\n      percent_of_titles\n  nest: by_title + { limit: 5}\n  nest: by_director is by_name + {\n    where: principals.category = 'director'\n    limit: 5\n  }\n  nest: by_actor is by_name + {\n    where: principals.category ~ 'act%'\n    limit: 5\n  }\n  nest: by_year_line_chart is {\n    group_by: startYear\n    aggregate: percent_of_titles is title_count/exclude(title_count, genre)*100\n  }\n}\n// --! style dashboard",
+    "value": "run: movies-> {\n  where: startYear ? > 1940 & < 2020\n  group_by: genre is genres.value\n     aggregate: \n      title_count, \n      total_ratings\n      percent_of_titles\n  nest: by_title mod { limit: 5}\n  nest: by_director is by_name mod {\n    where: principals.category = 'director'\n    limit: 5\n  }\n  nest: by_actor is by_name mod {\n    where: principals.category ~ 'act%'\n    limit: 5\n  }\n  nest: by_year_line_chart is {\n    group_by: startYear\n    aggregate: percent_of_titles is title_count/exclude(title_count, genre)*100\n  }\n}\n// --! style dashboard",
     "metadata": {}
   }
 ]
