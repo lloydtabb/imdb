@@ -6,56 +6,56 @@ import "raw_data.malloy"
 
 >>>sql connection:duckdb
 copy( %{
-	raw_titles -> {
-		join_one: raw_ratings on tconst = raw_ratings.tconst
-		join_one: raw_crew on tconst = raw_crew.tconst
-		where: raw_ratings.numVotes > 30000
-		project:
-			tconst
-			isAdult, originalTitle, primaryTitle
-			startYear is startYear:::number 
-			endYear is endYear:::number
-			runtimeMinutes is runtimeMinutes:::number
-			genres is str_split!(genres,',')
-			directors is str_split!(raw_crew.directors,',')
-			writers is str_split!(raw_crew.writers,',')
-			averageRating is raw_ratings.averageRating:::number
-			numVotes is raw_ratings.numVotes:::number
-		}
+  raw_titles -> {
+    join_one: raw_ratings on tconst = raw_ratings.tconst
+    join_one: raw_crew on tconst = raw_crew.tconst
+    where: raw_ratings.numVotes > 30000
+    project:
+      tconst
+      isAdult, originalTitle, primaryTitle
+      startYear is startYear:::number 
+      endYear is endYear:::number
+      runtimeMinutes is runtimeMinutes:::number
+      genres is str_split!(genres,',')
+      directors is str_split!(raw_crew.directors,',')
+      writers is str_split!(raw_crew.writers,',')
+      averageRating is raw_ratings.averageRating:::number
+      numVotes is raw_ratings.numVotes:::number
+    }
 }% ) to 'data/titles.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
 
 >>>sql
-	copy (
-		%{
-			raw_principals -> {
-				join_one: titles is table('duckdb:data/titles.parquet') on tconst = titles.tconst
-				where: titles.tconst != null
-				project: 
-					tconst
-					ordering
-					nconst
-					category
-					job
-					characters is str_split!(
-				regexp_replace!(characters,'[\[\]\"]','','g'),
-				',')
-			}
-		}%
-	) to 'principals.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
+  copy (
+    %{
+      raw_principals -> {
+        join_one: titles is table('duckdb:data/titles.parquet') on tconst = titles.tconst
+        where: titles.tconst != null
+        project: 
+          tconst
+          ordering
+          nconst
+          category
+          job
+          characters is str_split!(
+        regexp_replace!(characters,'[\[\]\"]','','g'),
+        ',')
+      }
+    }%
+  ) to 'principals.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
 
 
 >>>sql connection:duckdb
 copy (
-			%{
-			raw_names -> {
-				join_many: principals is table('duckdb:data/principals.parquet') on nconst = principals.nconst
-				where: principals.nconst != null
-				group_by: 
-					nconst
-					primaryName
-					primaryProfession
-					birthYear is birthYear:::number
-					deathYear is deathYear:::number
-			}
-		}%
+      %{
+      raw_names -> {
+        join_many: principals is table('duckdb:data/principals.parquet') on nconst = principals.nconst
+        where: principals.nconst != null
+        group_by: 
+          nconst
+          primaryName
+          primaryProfession
+          birthYear is birthYear:::number
+          deathYear is deathYear:::number
+      }
+    }%
 ) to 'data/names.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
