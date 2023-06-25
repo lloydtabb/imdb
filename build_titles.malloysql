@@ -1,5 +1,10 @@
 >>>malloy
 
+// Build's three files 
+//  titles - movie info
+//  principals - people that worked on the movie and what they did
+//  names - information about the people that worked on the movies.
+
 // import raw file definitions.
 
 import "raw_data.malloy"
@@ -10,7 +15,7 @@ import "raw_data.malloy"
 --  Limit the number of titles to ratings of more than XXXX
 --  Join in the ratings data, nest the crew data
 --  `:::` is a safe cast operation that converts strings to numbes
-copy( %{
+copy %{
   raw_titles -> {
     join_one: raw_ratings on tconst = raw_ratings.tconst
     join_one: raw_crew on tconst = raw_crew.tconst
@@ -27,13 +32,13 @@ copy( %{
       averageRating is raw_ratings.averageRating:::number
       numVotes is raw_ratings.numVotes:::number
     }
-}% ) to 'data/titles.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
+}%  to 'data/titles.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
 
 >>>sql
 -- Build 'principals.parquet'
 --  Principals are people that worked on the movie
 --  Only include data for movies we have titles for (the join)
-copy (
+copy 
   %{
     raw_principals -> {
       join_one: titles is table('duckdb:data/titles.parquet') on tconst = titles.tconst
@@ -49,14 +54,14 @@ copy (
       ',')
     }
   }%
-) to 'principals.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
+ to 'principals.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
 
 
 >>>sql connection:duckdb
 -- Build 'names.parquet'
 --  Only include data for people in the principals table
 --  `:::` safe casts the birthYear and deathYear to a numbers.
-copy (
+copy 
   %{
   raw_names -> {
     join_many: principals is table('duckdb:data/principals.parquet') on nconst = principals.nconst
@@ -69,4 +74,4 @@ copy (
       deathYear is deathYear:::number
     }
   }%
-) to 'data/names.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
+to 'data/names.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
