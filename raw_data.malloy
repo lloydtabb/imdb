@@ -12,8 +12,8 @@ sql: sql_titles is {
 	select: """ 
 		SELECT * FROM
 		read_csv_auto(
-			-- 'https://datasets.imdbws.com/title.basics.tsv.gz'
-			'data/title.basics.tsv.gz'
+			'https://datasets.imdbws.com/title.basics.tsv.gz'
+			-- 'data/title.basics.tsv.gz'
 			, all_varchar=true, delim='\t', quote='',header=True)
 	"""
 	connection: "duckdb"
@@ -25,8 +25,8 @@ sql: sql_principals is {
 	select: """ 
 		SELECT * FROM
 		read_csv_auto(
-			-- 'https://datasets.imdbws.com/title.principals.tsv.gz'
-			'data/title.principals.tsv.gz'
+			'https://datasets.imdbws.com/title.principals.tsv.gz'
+			-- 'data/title.principals.tsv.gz'
 			, all_varchar=true, delim='\t', quote='',header=True)
 	"""
 	connection: "duckdb"
@@ -38,8 +38,8 @@ sql: sql_ratings is {
 	select: """ 
 		SELECT * FROM
 		read_csv_auto(
-			 -- 'https://datasets.imdbws.com/title.ratings.tsv.gz'
-			'data/title.ratings.tsv.gz'
+			 'https://datasets.imdbws.com/title.ratings.tsv.gz'
+			-- 'data/title.ratings.tsv.gz'
 			, all_varchar=true, delim='\t', quote='',header=True)
 	"""
 	connection: "duckdb"
@@ -51,8 +51,8 @@ sql: sql_crew is {
 	select: """ 
 		SELECT * FROM
 		read_csv_auto(
-			-- 'https://datasets.imdbws.com/title.crew.tsv.gz'
-			'data/title.crew.tsv.gz'
+			'https://datasets.imdbws.com/title.crew.tsv.gz'
+			-- 'data/title.crew.tsv.gz'
 			, all_varchar=true, delim='\t', quote='',header=True)
 	"""
 	connection: "duckdb"
@@ -64,8 +64,8 @@ sql: sql_names is {
 	select: """ 
 		SELECT * FROM
 		read_csv_auto(
-			-- 'https://datasets.imdbws.com/name.basics.tsv.gz'
-			'data/name.basics.tsv.gz'
+			'https://datasets.imdbws.com/name.basics.tsv.gz'
+			-- 'data/name.basics.tsv.gz'
 			, all_varchar=true, delim='\t', quote='',header=True)
 	"""
 	connection: "duckdb"
