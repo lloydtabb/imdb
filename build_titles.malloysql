@@ -46,16 +46,16 @@ copy( %{
 
 >>>sql connection:duckdb
 copy (
-      %{
-      raw_names -> {
-        join_many: principals is table('duckdb:data/principals.parquet') on nconst = principals.nconst
-        where: principals.nconst != null
-        group_by: 
-          nconst
-          primaryName
-          primaryProfession
-          birthYear is birthYear:::number
-          deathYear is deathYear:::number
-      }
-    }%
+  %{
+  raw_names -> {
+    join_many: principals is table('duckdb:data/principals.parquet') on nconst = principals.nconst
+    where: principals.nconst != null
+    group_by: 
+      nconst
+      primaryName
+      primaryProfession
+      birthYear is birthYear:::number
+      deathYear is deathYear:::number
+    }
+  }%
 ) to 'data/names.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
