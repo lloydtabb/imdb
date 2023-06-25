@@ -1,82 +1,26 @@
->>>sql connection:duckdb
--- Seeing some HTTP failures so reading from local files
--- cd data
--- sh get.sh
-
-copy (SELECT * FROM
-	read_csv_auto('https://datasets.imdbws.com/title.ratings.tsv.gz', delim='\t', quote='',header=True)
-	) to 'data/raw_ratings.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
->>>sql connection:duckdb
-copy (SELECT * FROM
-	read_csv_auto('https://datasets.imdbws.com/name.basics.tsv.gz', delim='\t', quote='',header=True)
-	) to 'data/raw_names.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
->>>sql connection:duckdb
-copy (SELECT * FROM
-	read_csv_auto(
-		-- 'https://datasets.imdbws.com/title.crew.tsv.gz'
-		'data/title.crew.tsv.gz'
-		, delim='\t', quote='',header=True)
-	) to 'data/raw_crew.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
-
->>>sql connection:duckdb
-copy (SELECT * FROM
-	read_csv_auto(
-		-- 'https://datasets.imdbws.com/title.principals.tsv.gz'
-		'data/title.principals.tsv.gz'
-		, all_varchar=true, delim='\t', quote='',header=True)
-	) to 'data/raw_principals.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
->>>sql connection:duckdb
-copy (SELECT * FROM
-	read_csv_auto(
-		-- this fails in HTTP get so we 
-		-- cd data; wget https://datasets.imdbws.com/title.basics.tsv.gz
-		-- 'https://datasets.imdbws.com/title.basics.tsv.gz'
-		'data/title.basics.tsv.gz'
-	, all_varchar=true, header=True, quote='', delim='\t')
-	) to 'data/raw_title.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
->>>sql connection:duckdb
-copy (SELECT * FROM
-	read_csv_auto('https://datasets.imdbws.com/title.ratings.tsv.gz', delim='\t', quote='',header=True)
-	) to 'data/raw_ratings.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
-
 >>>malloy
-source: raw_names is table('duckdb:data/raw_names.parquet') {
-}
 
-source: raw_crew is table('duckdb:data/raw_crew.parquet') {
-}
+// import raw file definitions.
 
-source: raw_ratings is table('duckdb:data/raw_ratings.parquet') {
-}
+import "raw_data.malloy"
 
-source: raw_title is table('duckdb:data/raw_title.parquet') {
-	/* rename: _startYear is startYear
-	dimension: startYear is _startYear::number 
-	rename: _endYear is endYear
-	dimension: endYear is _endYear::number
-	rename: _runtimeMinutes is runtimeMinutes
-	dimension: runtimeMinutes is _runtimeMinutes::number */
-}
-
-source: raw_principals is table('duckdb:data/raw_ratings.parquet') {
-}
-
->>>sql
+>>>sql connection:duckdb
 copy( %{
-	raw_title -> {
+	raw_titles -> {
 		join_one: raw_ratings on tconst = raw_ratings.tconst
 		join_one: raw_crew on tconst = raw_crew.tconst
 		where: raw_ratings.numVotes > 30000
 		project:
 			tconst
 			isAdult, originalTitle, primaryTitle
-			startYear
-			endYear
-			runtimeMinutes
+			startYear is startYear:::number 
+			endYear is endYear:::number
+			runtimeMinutes is runtimeMinutes:::number
+			genres is str_split!(genres,',')
 			directors is str_split!(raw_crew.directors,',')
 			writers is str_split!(raw_crew.writers,',')
-			raw_ratings.averageRating
-			raw_ratings.numVotes
+			averageRating is raw_ratings.averageRating:::number
+			numVotes is raw_ratings.numVotes:::number
 		}
 }% ) to 'data/titles.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
 
@@ -84,6 +28,8 @@ copy( %{
 	copy (
 		%{
 			raw_principals -> {
+				join_one: titles is table('duckdb:data/titles.parquet') on tconst = titles.tconst
+				where: titles.tconst != null
 				project: 
 					tconst
 					ordering
@@ -95,78 +41,21 @@ copy( %{
 				',')
 			}
 		}%
-		SELECT
-			p.tconst, ordering, nconst, category, job,
-			str_split(
-				regexp_replace(characters,'[\[\]\"]','','g'),
-				',') as characters
-		FROM read_csv_auto('data/title.principals.tsv.gz', delim='\t', quote='',header=True) as p
-		INNER JOIN 'data/titles.parquet' as t ON t.tconst = p.tconst
 	) to 'principals.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
 
 
 >>>sql connection:duckdb
 copy (
-	with
-	crew as (
-		select
-			tconst,
-			{ 'directors': str_split(directors,',')  ,
-				'writers' : str_split(writers,',')
-			} as crew
-		from read_csv_auto('data/title.crew.tsv.gz', delim='\t', quote='',header=True)
-	),
-	ratings as (
-		SELECT tconst, ROW(averageRating, numVotes) as ratings
-		FROM read_csv_auto('data/title.ratings.tsv.gz', delim='\t', quote='',header=True) as r
-	),
-	titles as (
-		select title.tconst, isAdult, originalTitle, primaryTitle,
-		str_split(genres,',') as genres,
-		TRY_CAST(startYear as integer) as startYear,
-		TRY_CAST(endYear as integer) as endYear,
-		TRY_CAST(runtimeMinutes as integer) END as runtimeMinutes,
-		crew.crew,
-		ratings.ratings,
-		FROM read_csv_auto('data/title.basics.tsv.gz', delim='\t', quote='',header=True, all_varchar=true) as title
-		LEFT JOIN crew on title.tconst = crew.tconst
-		LEFT JOIN ratings on title.tconst = ratings.tconst
-		WHERE ratings.numVotes > 30000
-	)
-	select * from titles
-) to 'data/titles.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
-
->>>sql
-	copy (
-		SELECT
-			p.tconst, ordering, nconst, category, job,
-			str_split(
-				regexp_replace(characters,'[\[\]\"]','','g'),
-				',') as characters
-		FROM read_csv_auto('data/title.principals.tsv.gz', delim='\t', quote='',header=True) as p
-		INNER JOIN 'data/titles.parquet' as t ON t.tconst = p.tconst
-	) to 'principals.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
-
->>>sql connection:duckdb
-copy (
-	SELECT
-		p.tconst, ordering, nconst, category, job,
-		str_split(
-			regexp_replace(characters,'[\[\]\"]','','g'),
-			',') as characters
-	FROM read_csv_auto('data/title.principals.tsv.gz', delim='\t', quote='',header=True) as p
-	INNER JOIN 'data/titles.parquet' as t ON t.tconst = p.tconst
-) to 'data/principals.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
-
->>>sql connection:duckdb
-copy (
-  SELECT
-    n.nconst,
-    n.primaryName,
-    n.primaryProfession,
-    case WHEN regexp_matches(birthYear,'[0-9]+') THEN CAST(birthYear as integer) END as birthYear,
-    case WHEN regexp_matches(deathYear,'[0-9]+') THEN CAST(deathYear as integer) END as deathYear,
-  FROM read_csv_auto('data/name.basics.tsv.gz', delim='\t', quote='',header=True, all_varchar=true) as n
-  	INNER JOIN 'data/principals.parquet' as p ON n.nconst = p.nconst
-  GROUP BY 1,2,3,4,5
+			%{
+			raw_names -> {
+				join_many: principals is table('duckdb:data/principals.parquet') on nconst = principals.nconst
+				where: principals.nconst != null
+				group_by: 
+					nconst
+					primaryName
+					primaryProfession
+					birthYear is birthYear:::number
+					deathYear is deathYear:::number
+			}
+		}%
 ) to 'data/names.parquet' (FORMAT 'parquet', CODEC 'ZSTD')

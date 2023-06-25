@@ -20,7 +20,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: movies->by_name + {\n  where: principals.category = 'director'\n  nest: by_title + { limit: 5}\n  limit: 10\n}",
+    "value": "run: movies->by_name + {\n  where: principals.category = 'director'\n  nest: by_title + { limit: 5}\n  limit: 10\n}",
     "metadata": {}
   },
   {
@@ -32,7 +32,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: movies->by_name + {\n  where: principals.category = 'director', genres.value = 'Comedy'\n  nest: by_title + { limit: 5}\n  limit: 10\n}",
+    "value": "run: movies->by_name + {\n  where: principals.category = 'director', genres.value = 'Comedy'\n  nest: by_title + { limit: 5}\n  limit: 10\n}",
     "metadata": {}
   }
 ]

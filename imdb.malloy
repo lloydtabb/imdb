@@ -21,19 +21,22 @@ source: movies is table('duckdb:data/titles.parquet') + {
   join_many: principals on tconst = principals.tconst
   primary_key: tconst
 
-  declare:
+  measure:
     title_count is count(distinct tconst)
     row_count is count()
-    total_ratings is sum(ratings.numVotes/1000.0)
-    average_rating is ratings.averageRating.avg()
+    total_ratings is sum(numVotes/1000.0)
+    average_rating is averageRating.avg()
     percent_of_titles is title_count/all(title_count)* 100
 
+  dimension:
+    # image
     movie_image is concat('https://artifacts.flyxit.com/flyx-artifacts/',tconst,'.jpg')
+    # link
     movie_url is concat('https://www.imdb.com/title/',tconst)
 
 
   query: by_title is {
-    group_by: primaryTitle, startYear, ratings.numVotes
+    group_by: primaryTitle, startYear, numVotes
     order_by: 3 desc
   }
   query: by_year is {
@@ -71,6 +74,7 @@ source: movies is table('duckdb:data/titles.parquet') + {
     nest: by_genre
   }
 
+  # dashboard
   query: titles_dashboard is {
     group_by: 
       movie_image
@@ -81,7 +85,8 @@ source: movies is table('duckdb:data/titles.parquet') + {
     nest:
       genre_list is by_genre
       by_cast is by_job_category {
-        nest: by_name_list is by_name + {limit: 200}
+        # list
+        nest: names is by_name + {limit: 200}
       }
     limit: 20
     order_by: 2 desc
