@@ -5,6 +5,11 @@
 import "raw_data.malloy"
 
 >>>sql connection:duckdb
+
+-- Build 'titles.parquet'
+--  Limit the number of titles to ratings of more than XXXX
+--  Join in the ratings data, nest the crew data
+--  `:::` is a safe cast operation that converts strings to numbes
 copy( %{
   raw_titles -> {
     join_one: raw_ratings on tconst = raw_ratings.tconst
@@ -25,26 +30,32 @@ copy( %{
 }% ) to 'data/titles.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
 
 >>>sql
-  copy (
-    %{
-      raw_principals -> {
-        join_one: titles is table('duckdb:data/titles.parquet') on tconst = titles.tconst
-        where: titles.tconst != null
-        project: 
-          tconst
-          ordering
-          nconst
-          category
-          job
-          characters is str_split!(
-        regexp_replace!(characters,'[\[\]\"]','','g'),
-        ',')
-      }
-    }%
-  ) to 'principals.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
+-- Build 'principals.parquet'
+--  Principals are people that worked on the movie
+--  Only include data for movies we have titles for (the join)
+copy (
+  %{
+    raw_principals -> {
+      join_one: titles is table('duckdb:data/titles.parquet') on tconst = titles.tconst
+      where: titles.tconst != null
+      project: 
+        tconst
+        ordering
+        nconst
+        category
+        job
+        characters is str_split!(
+      regexp_replace!(characters,'[\[\]\"]','','g'),
+      ',')
+    }
+  }%
+) to 'principals.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
 
 
 >>>sql connection:duckdb
+-- Build 'names.parquet'
+--  Only include data for people in the principals table
+--  `:::` safe casts the birthYear and deathYear to a numbers.
 copy (
   %{
   raw_names -> {
