@@ -22,15 +22,15 @@ source: movies is table('duckdb:../data/titles.parquet') + {
     person is principals.people.primaryName
     person_id is principals.nconst
     job is principals.category
-    votes is ratings.numVotes
+    votes is numVotes
     genre is genres.value
 
   measure:
     title_count is count(distinct tconst)
     row_count is count()
     person_count is count(distinct person_id)
-    total_votes is sum(ratings.numVotes/1000.0)
-    average_rating is ratings.averageRating.avg()
+    total_votes is sum(numVotes/1000.0)
+    average_rating is averageRating.avg()
     percent_of_titles is title_count/all(title_count)* 100
 
   query: top_titles is {

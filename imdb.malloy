@@ -26,7 +26,8 @@ source: movies is table('duckdb:data/titles.parquet') + {
     row_count is count()
     total_ratings is sum(numVotes/1000.0)
     average_rating is averageRating.avg()
-    percent_of_titles is title_count/all(title_count)* 100
+    # percent
+    percent_of_titles is title_count/all(title_count)
 
   dimension:
     # image
@@ -62,7 +63,7 @@ source: movies is table('duckdb:data/titles.parquet') + {
     aggregate: 
       title_count, 
       total_ratings
-      percent_of_titles is title_count/all(title_count)* 100
+      percent_of_titles
 
   }
   query: by_character is {
