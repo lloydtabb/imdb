@@ -20,7 +20,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query:  movies-> by_title + {\n  where: principals.people.primaryName ~ r'Steven Spielberg'\n  limit: 40\n}",
+    "value": "query: speiberg_movies is movies->{\n  where: principals.people.primaryName ~ r'Steven Spielberg'\n  group_by: tconst, principals.people.nconst\n}\n\nrun: speiberg_movies",
     "metadata": {}
   },
   {
@@ -32,7 +32,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: speiberg_movies is movies->{\n  where: principals.people.primaryName ~ r'Steven Spielberg'\n  group_by: tconst, principals.people.nconst\n}\nquery: movies -> by_name + {\n  join_one: x is from(->speiberg_movies) on x.tconst=tconst\n  where: x.tconst != null\n  where: principals.people.nconst != x.nconst\n  aggregate: `years` is concat(min(startYear)::string, \n      '-', max(startYear)::string)\n  limit: 20\n  order_by: title_count desc\n  nest: by_job_list is by_job_category\n  nest: title_list is by_title\n}",
+    "value": "run: movies -> by_name + {\n  join_one: x is from(->speiberg_movies) on x.tconst=tconst\n  where: x.tconst != null\n  where: principals.people.nconst != x.nconst\n  aggregate: `years` is concat(min(startYear)::string, \n      '-', max(startYear)::string)\n  limit: 20\n  order_by: title_count desc\n  nest: by_job_list is by_job_category\n  nest: title_list is by_title\n}",
     "metadata": {}
   },
   {
@@ -44,7 +44,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "\nquery: speiberg_movies is movies->{\n  where: principals.people.primaryName ~ r'Steven Spielberg'\n  group_by: tconst\n}\n\nquery: movies -> { \n  join_one: x is from(->speiberg_movies) with tconst\n  where: x.tconst != null\n  nest: titles_dashboard\n}\n",
+    "value": "# dashboard\nrun: movies -> titles_dashboard + { \n  join_one: x is from(->speiberg_movies) on x.tconst=tconst\n  where: x.tconst != null\n}\n",
     "metadata": {}
   }
 ]

@@ -20,7 +20,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: movies -> {\n  where: startYear = 2008\n  project: primaryTitle\n}",
+    "value": "run: movies -> {\n  where: startYear = 2008\n  project: primaryTitle\n}",
     "metadata": {}
   },
   {
@@ -32,7 +32,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: people -> {\n  where: primaryName = 'Emma Stone'\n  project: birthYear\n}",
+    "value": "run: people -> {\n  where: primaryName = 'Emma Stone'\n  project: birthYear\n}",
     "metadata": {}
   },
   {
@@ -44,7 +44,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: movies -> {\n  where: principals.people.primaryName = 'Emma Stone' \n    and startYear >= 2018\n  project: primaryTitle\n  order_by: 1\n}",
+    "value": "run: movies -> {\n  where: principals.people.primaryName = 'Emma Stone' \n    and startYear >= 2018\n  group_by: primaryTitle\n  order_by: 1\n}",
     "metadata": {}
   },
   {
@@ -56,7 +56,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: movies -> {\n  where: ratings.averageRating = 10\n  aggregate: title_count\n  nest: by_title is {\n    group_by: primaryTitle\n  }\n}\n",
+    "value": "query: movies -> {\n  where: averageRating = 10\n  aggregate: title_count\n  nest: by_title is {\n    group_by: primaryTitle\n  }\n}\n",
     "metadata": {}
   },
   {
@@ -80,7 +80,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: movies -> {\n  where: startYear = 2012\n  aggregate: average_rating is ratings.averageRating.avg()\n}",
+    "value": "query: movies -> {\n  where: startYear = 2012\n  aggregate: average_rating is averageRating.avg()\n}",
     "metadata": {}
   },
   {
@@ -92,7 +92,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: movies -> {\n  where: primaryTitle = 'Toy Story'\n  project: principals.people.primaryName\n  order_by: 1\n}",
+    "value": "query: movies -> {\n  where: primaryTitle = 'Toy Story'\n  group_by: principals.people.primaryName\n  order_by: 1\n}",
     "metadata": {}
   },
   {
@@ -116,7 +116,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: movies -> {\n  where: ratings.averageRating >= 9\n    and principals.category = 'director'\n  group_by: \n    principals.people.primaryName \n}",
+    "value": "query: movies -> {\n  where: averageRating >= 9\n    and principals.category = 'director'\n  group_by: \n    principals.people.primaryName \n}",
     "metadata": {}
   },
   {
@@ -128,7 +128,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: movies -> {\n  where: principals.people.primaryName = 'Chadwick Boseman' \n  project: \n    primaryTitle\n    ratings.averageRating\n  order_by: 2 desc\n  limit: 5\n}",
+    "value": "query: movies -> {\n  where: principals.people.primaryName = 'Chadwick Boseman' \n  group_by: \n    primaryTitle\n    averageRating\n  order_by: 2 desc\n  limit: 5\n}",
     "metadata": {}
   },
   {
@@ -140,7 +140,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: johnnys_movies is movies ->{\n  where: principals.people.primaryName = 'Johnny Depp'\n  project: tconst\n}\n\nquery: movies -> {\n  join_one: x is from(->johnnys_movies) with tconst\n  where: x.tconst != null\n    and  principals.people.primaryName = 'Helena Bonham Carter'\n  project: primaryTitle\n}\n",
+    "value": "query: johnnys_movies is movies ->{\n  where: principals.people.primaryName = 'Johnny Depp'\n  project: tconst\n}\n\nquery: movies -> {\n  join_one: x is from(->johnnys_movies) with tconst\n  where: x.tconst != null\n    and  principals.people.primaryName = 'Helena Bonham Carter'\n  group_by: primaryTitle\n}\n",
     "metadata": {}
   },
   {
