@@ -14,7 +14,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "# dashboard\nrun: movies->  by_name + {\n  where: numVotes > 50000 \n  nest: \n    by_title + { limit: 5}\n    by_year_line_chart is by_year\n    by_job_category\n  limit: 10 \n} ",
+    "value": "# dashboard\nrun: movies->  by_name + {\n  where: numVotes > 50000 \n  nest: \n    by_title + { limit: 5}\n    # line_chart\n    by_year\n    by_job_category\n  limit: 10 \n} ",
     "metadata": {}
   },
   {
@@ -26,7 +26,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: movies-> {\n  where: genres.value = 'Comedy'\n  nest: star_dashboard is by_name + { \n    nest: \n      by_title + { limit: 5}\n      by_year_line_chart is by_year\n      by_job_category\n    limit: 10 \n  }\n} ",
+    "value": "query: movies-> {\n  where: genres.value = 'Comedy'\n  nest: star_dashboard is by_name + { \n    nest: \n      by_title + { limit: 5}\n      # line_chart\n      by_year\n      by_job_category\n    limit: 10 \n  }\n} ",
     "metadata": {}
   }
 ]
