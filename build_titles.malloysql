@@ -13,7 +13,12 @@ This script produces three files.  Files are downloaded from https://datasets.im
 
 This script is designed to run locally (not from the web version).  Clone the repository and launch VSCode
 
-To fetch the raw data, first.
+
+>>>markdown
+## Raw Data Definitions
+Define sources for all the raw data.
+
+To fetch the raw data, first run the commands.
 
 ```
 cd data
@@ -22,7 +27,44 @@ sh get.sh
 >>>malloy
 // Import the raw data.
 
-import "raw_data.malloy"
+source: raw_titles is duckdb.sql(""" 
+		SELECT * FROM
+		read_csv_auto(
+			-- 'https://datasets.imdbws.com/title.basics.tsv.gz'
+			'data/title.basics.tsv.gz'
+			, all_varchar=true, delim='\t', quote='',header=True)
+	""")
+
+source: raw_principals is duckdb.sql(""" 
+		SELECT * FROM
+		read_csv_auto(
+			-- 'https://datasets.imdbws.com/title.principals.tsv.gz'
+			'data/title.principals.tsv.gz'
+			, all_varchar=true, delim='\t', quote='',header=True)
+	""")
+
+source: raw_ratings is duckdb.sql(""" 
+		SELECT * FROM
+		read_csv_auto(
+			-- 'https://datasets.imdbws.com/title.ratings.tsv.gz'
+			'data/title.ratings.tsv.gz'
+			, all_varchar=true, delim='\t', quote='',header=True)
+	""")
+
+source: raw_crew is duckdb.sql(""" 
+		SELECT * FROM
+		read_csv_auto(
+			-- 'https://datasets.imdbws.com/title.crew.tsv.gz'
+			'data/title.crew.tsv.gz'
+			, all_varchar=true, delim='\t', quote='',header=True)
+	""")
+source: raw_names is duckdb.sql(""" 
+		SELECT * FROM
+		read_csv_auto(
+			-- 'https://datasets.imdbws.com/name.basics.tsv.gz'
+			'data/name.basics.tsv.gz'
+			, all_varchar=true, delim='\t', quote='',header=True)
+	""")
 >>>markdown
 ## Build titles.parquet
 
