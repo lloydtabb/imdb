@@ -1,32 +1,31 @@
-[
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "# Movie stars, titles time and jobs\nMovie people work lots of jobs.  Take a look at the top stars, what they work on, how long they have been working and what they do.",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "import \"imdb.malloy\"",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "# dashboard\nrun: movies->  by_name + {\n  where: numVotes > 50000 \n  nest: \n    by_title + { limit: 5}\n    # line_chart\n    by_year\n    by_job_category\n  limit: 10 \n} ",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "## Comedy movie stars titles time and jobs\nFilter the data to only look in the genre 'comedy' and examine the top folks.",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "query: movies-> {\n  where: genres.value = 'Comedy'\n  nest: star_dashboard is by_name + { \n    nest: \n      by_title + { limit: 5}\n      # line_chart\n      by_year\n      by_job_category\n    limit: 10 \n  }\n} ",
-    "metadata": {}
+>>>markdown
+# Movie stars, titles time and jobs
+Movie people work lots of jobs.  Take a look at the top stars, what they work on, how long they have been working and what they do.
+>>>malloy
+import "imdb.malloy" 
+>>>malloy
+# dashboard
+run: movies->  by_name + {
+  where: numVotes > 50000 
+  nest: 
+    by_title + { limit: 5}
+    # line_chart
+    by_year
+    by_job_category
+  limit: 10 
+} 
+>>>markdown
+## Comedy movie stars titles time and jobs
+Filter the data to only look in the genre 'comedy' and examine the top folks.
+>>>malloy
+query: movies-> {
+  where: genres.value = 'Comedy'
+  nest: star_dashboard is by_name + { 
+    nest: 
+      by_title + { limit: 5}
+      # line_chart
+      by_year
+      by_job_category
+    limit: 10 
   }
-]
+} 

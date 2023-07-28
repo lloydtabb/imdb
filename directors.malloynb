@@ -1,38 +1,21 @@
-[
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "# Directors\nWho are the top directors?  What did they direct? In each genres?  Who do they work with?",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "import \"imdb.malloy\"",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "## Top directors and their 5 best movies",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "run: movies->by_name + {\n  where: principals.category = 'director'\n  nest: by_title + { limit: 5}\n  limit: 10\n}",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "## Top comedy directors and their 5 best movies",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "run: movies->by_name + {\n  where: principals.category = 'director', genres.value = 'Comedy'\n  nest: by_title + { limit: 5}\n  limit: 10\n}",
-    "metadata": {}
-  }
-]
+>>>markdown
+# Directors
+Who are the top directors?  What did they direct? In each genres?  Who do they work with?
+>>>malloy
+import "imdb.malloy" 
+>>>markdown
+## Top directors and their 5 best movies
+>>>malloy
+run: movies->by_name + {
+  where: principals.category = 'director'
+  nest: by_title + { limit: 5}
+  limit: 10
+}
+>>>markdown
+## Top comedy directors and their 5 best movies
+>>>malloy
+run: movies->by_name + {
+  where: principals.category = 'director', genres.value = 'Comedy'
+  nest: by_title + { limit: 5}
+  limit: 10
+}

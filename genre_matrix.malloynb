@@ -1,26 +1,55 @@
-[
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "# Genres Matrix\nGenre combinations tell you what to expect in a movie.  What are the top movies in each combination pair?",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "import \"imdb.malloy\"",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "## Genre matrix, top movies",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "run: movies + {\n  join_many: x is from( movies-> {\n    group_by: tconst, genres.value\n  } ) on tconst = x.tconst\n}\n->  {\n  where: genres.value != x.value\n  group_by: genre1 is genres.value\n  aggregate:  title_count\n  nest: genre is {\n    group_by: \n      genre1 is genres.value\n      genre2 is x.value\n    # list\n    nest: titles is {\n      group_by: primaryTitle, numVotes\n      order_by: 2 desc\n      limit: 10\n    }\n  }\n}",
-    "metadata": {}
+>>>markdown
+# Genres Matrix
+Genre combinations tell you what to expect in a movie.  What are the top movies in each combination pair?
+
+>>>malloy
+import "imdb.malloy" 
+
+>>>markdown
+## Genre matrix, top movies
+
+>>>malloy
+run: movies + {
+  join_many: x is from( movies-> {
+    group_by: tconst, genres.value
+  } ) on tconst = x.tconst
+}
+->  {
+  where: genres.value != x.value
+  group_by: genre1 is genres.value
+  aggregate:  title_count
+  nest: genre is {
+    group_by: 
+      genre1 is genres.value
+      genre2 is x.value
+    # list
+    nest: titles is {
+      group_by: primaryTitle, numVotes
+      order_by: 2 desc
+      limit: 10
+    }
   }
-]
+}
+>>>malloy
+run: movies 
+->  {
+  extend : {
+    join_many: x is from( movies-> {
+      group_by: tconst, genres.value
+    } ) on tconst = x.tconst
+  }
+ 
+  group_by: genre1 is genres.value
+  aggregate:  title_count
+  nest: genre is {
+    group_by: 
+      genre1 is genres.value
+      genre2 is x.value
+    # list
+    nest: titles is {
+      group_by: primaryTitle, numVotes
+      order_by: 2 desc
+      limit: 10
+    }
+  }
+}

@@ -1,20 +1,31 @@
-[
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "# Genre Analysis\nTop movies, top people, popularity over time",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "import \"imdb.malloy\"",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "# dashboard\nrun: movies-> {\n  where: startYear ? > 1940 & < 2020\n  group_by: genre is genres.value\n     aggregate: \n      title_count, \n      total_ratings\n      percent_of_titles\n  nest: by_title + { limit: 5}\n  nest: by_director is by_name + {\n    where: principals.category = 'director'\n    limit: 5\n  }\n  nest: by_actor is by_name + {\n    where: principals.category ~ 'act%'\n    limit: 5\n  }\n  # line_chart\n  nest: by_year is {\n    group_by: startYear\n    aggregate: percent_of_titles is title_count/exclude(title_count, genre)*100\n  }\n}",
-    "metadata": {}
+>>>markdown
+# Genre Analysis
+Top movies, top people, popularity over time
+
+>>>malloy
+import "imdb.malloy" 
+
+>>>malloy
+# dashboard
+run: movies-> {
+  where: startYear ? > 1940 & < 2020
+  group_by: genre is genres.value
+     aggregate: 
+      title_count, 
+      total_ratings
+      percent_of_titles
+  nest: by_title + { limit: 5}
+  nest: by_director is by_name + {
+    where: principals.category = 'director'
+    limit: 5
   }
-]
+  nest: by_actor is by_name + {
+    where: principals.category ~ 'act%'
+    limit: 5
+  }
+  # line_chart
+  nest: by_year is {
+    group_by: startYear
+    aggregate: percent_of_titles is title_count/exclude(title_count, genre)*100
+  }
+}

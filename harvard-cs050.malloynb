@@ -1,158 +1,203 @@
-[
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "# Harvard CS 050 SQL Problems\nHarvard's beginnning computer science class teaches a section on SQL.  The class uses the IMDB as a data set for the class.  Here are the questions and answers in Malloy\n\nBelow is the semantic data model used to answer all the questions",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "source: people is table('duckdb:data/names.parquet')\nsource: principals is table('duckdb:data/principals.parquet') {\n  join_one: people is people on nconst = people.nconst\n}\nsource: movies is table('duckdb:data/titles.parquet') + {\n  join_many: principals on tconst = principals.tconst\n  measure:\n    title_count is count() \n}",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "## Question 1: Movie Titles after 2008\nList the titles of all movies released in 2008. Your query should output a table with a single column for the title of each movie.",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "run: movies -> {\n  where: startYear = 2008\n  project: primaryTitle\n}",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "## Question 2: When was Emma Stone Born?\nWrite a query to determine the birth year of Emma Stone. Your query should output a table with a single column and a single row (not including the header) containing Emma Stone’s birth year.\n",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "run: people -> {\n  where: primaryName = 'Emma Stone'\n  project: birthYear\n}",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "## Question 3: Emma Stone Titles\nYou may assume that there is only one person in the database with the name Emma Stone. Write a query to list the titles of all movies with a release date on or after 2018, in alphabetical order. Your query should output a table with a single column for the title of each movie.",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "run: movies -> {\n  where: principals.people.primaryName = 'Emma Stone' \n    and startYear >= 2018\n  group_by: primaryTitle\n  order_by: 1\n}",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "## Question 4: Movies with 10 rating\nMovies released in 2018 should be included, as should movies with release dates in the future. Write a query to determine the number of movies with an IMDb rating of 10.0. Your query should output a table with a single column and a single row (not including the header) containing the number of movies with a 10.0 rating.",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "query: movies -> {\n  where: averageRating = 10\n  aggregate: title_count\n  nest: by_title is {\n    group_by: primaryTitle\n  }\n}\n",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "## Question 5: Harry Potter Movies\n Write a Query to list the titles and release years of \n  all Harry Potter movies, in chronological order.\n Your query should output a table with two columns, one \n  for the title of each movie and one for the release year\n   of each movie.\n You may assume that the title of all Harry Potter \n  movies will begin with the words “Harry Potter”, \n  and that if a movie title begins with the words \n  “Harry Potter”, it is a Harry Potter movie.\n",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "query: movies -> {\n  where: primaryTitle ~ 'Harry Potter%'\n  project: primaryTitle, startYear\n  order_by: 2\n}",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "Question 6: Average Rating in 2012\n Write a query to determine the average rating of all movies \n  released in 2012.\n Your query should output a table with a single column and \n  a single row (not including the header) containing the\n   average rating.\n",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "query: movies -> {\n  where: startYear = 2012\n  aggregate: average_rating is averageRating.avg()\n}",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "## Question 7: Toy Story Who?\n Write a query to list the names of all people \n  who starred in Toy Story.\n Your query should output a table with a single column for \n  the name of each person. You may assume that there is only \n  one movie in the database  with the title Toy Story.\n",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "query: movies -> {\n  where: primaryTitle = 'Toy Story'\n  group_by: principals.people.primaryName\n  order_by: 1\n}",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "## Question 8: Who's Who 2004\n Write a query to list the names of all people who starred \n  in a movie released in 2004, ordered by birth year.\n Your query should output a table with a single column \n  for the name of each person.\n People with the same birth year may be listed in any order.\n No need to worry about people who have no birth year listed,\n  so long as those who do have a birth year are listed \n  in order. If a person appeared in more than one movie in 2004, \n  they should only appear in your results once.\n",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "query: movies -> {\n  where: startYear = 2004\n  group_by: \n    principals.people.primaryName \n    principals.people.birthYear\n  order_by: 1\n} ",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "## Question 9: High Directors\n Write  SQL query to list the names of all people who have \n  directed a movie that received a rating of at least 9.0.\n Your query should output a table with a single column for\n   the name of each person. If a person directed more than \n  one movie that received a rating of at least 9.0, they \n  should only appear in your results once.\n",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "query: movies -> {\n  where: averageRating >= 9\n    and principals.category = 'director'\n  group_by: \n    principals.people.primaryName \n}",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "## Question 10: Chadwick Boseman?\n Write a Query to list the titles of the five highest \n  rated movies (in order) that Chadwick Boseman starred \n  in, starting with the highest rated.\n Your query should output a table with a single column \n  for the title of each movie.\n You may assume that there is only one person in the \n  database with the name Chadwick Boseman.",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "query: movies -> {\n  where: principals.people.primaryName = 'Chadwick Boseman' \n  group_by: \n    primaryTitle\n    averageRating\n  order_by: 2 desc\n  limit: 5\n}",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "## Question 11: Johnny and Helena?\n Write a SQL query to list the titles of all\n  movies in which both Johnny Depp and Helena Bonham \n  Carter starred.\n Your query should output a table with a single column \n  for the title of each movie.\n You may assume that there is only one person in the \n  database with the name Johnny Depp.\n You may assume that there is only one person in \n  the database with the name Helena Bonham Carter.\n",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "query: johnnys_movies is movies ->{\n  where: principals.people.primaryName = 'Johnny Depp'\n  project: tconst\n}\n\nquery: movies -> {\n  join_one: x is from(->johnnys_movies) with tconst\n  where: x.tconst != null\n    and  principals.people.primaryName = 'Helena Bonham Carter'\n  group_by: primaryTitle\n}\n",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "## Question 12: One Degree of Kevin Bacon\n Write a SQL query to list the names of all people who \n  starred in a movie in which Kevin Bacon also starred.\n Your query should output a table with a single column \n  for the name of each person.\n There may be multiple people named Kevin Bacon in \n  the database. Be sure to only select the Kevin Bacon \n  born in 1958.\n Kevin Bacon himself should not be included in \n  the resulting list.",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "query: kevins_movies is movies ->{\n  where: principals.people.primaryName = 'Kevin Bacon'\n    and principals.people.birthYear = 1958\n  project: tconst\n}\n\nquery: movies -> {\n  join_one: x is from(->kevins_movies) with tconst\n  where: x.tconst != null\n    and principals.people.primaryName != 'Kevin Bacon'\n  group_by: principals.people.primaryName\n  aggregate: title_count\n}\n",
-    "metadata": {}
+>>>markdown
+# Harvard CS 050 SQL Problems
+Harvard's beginnning computer science class teaches a section on SQL.  The class uses the IMDB as a data set for the class.  Here are the questions and answers in Malloy
+
+Below is the semantic data model used to answer all the questions
+>>>malloy
+source: people is table('duckdb:data/names.parquet')
+source: principals is table('duckdb:data/principals.parquet') {
+  join_one: people is people on nconst = people.nconst
+}
+source: movies is table('duckdb:data/titles.parquet') + {
+  join_many: principals on tconst = principals.tconst
+  measure:
+    title_count is count() 
+}
+>>>markdown
+## Question 1: Movie Titles after 2008
+List the titles of all movies released in 2008. Your query should output a table with a single column for the title of each movie.
+>>>malloy
+run: movies -> {
+  where: startYear = 2008
+  project: primaryTitle
+}
+>>>markdown
+## Question 2: When was Emma Stone Born?
+Write a query to determine the birth year of Emma Stone. Your query should output a table with a single column and a single row (not including the header) containing Emma Stone’s birth year.
+
+>>>malloy
+run: people -> {
+  where: primaryName = 'Emma Stone'
+  project: birthYear
+}
+>>>markdown
+## Question 3: Emma Stone Titles
+You may assume that there is only one person in the database with the name Emma Stone. Write a query to list the titles of all movies with a release date on or after 2018, in alphabetical order. Your query should output a table with a single column for the title of each movie.
+>>>malloy
+run: movies -> {
+  where: principals.people.primaryName = 'Emma Stone' 
+    and startYear >= 2018
+  group_by: primaryTitle
+  order_by: 1
+}
+>>>markdown
+## Question 4: Movies with 10 rating
+Movies released in 2018 should be included, as should movies with release dates in the future. Write a query to determine the number of movies with an IMDb rating of 10.0. Your query should output a table with a single column and a single row (not including the header) containing the number of movies with a 10.0 rating.
+>>>malloy
+query: movies -> {
+  where: averageRating = 10
+  aggregate: title_count
+  nest: by_title is {
+    group_by: primaryTitle
   }
-]
+}
+
+>>>markdown
+## Question 5: Harry Potter Movies
+ Write a Query to list the titles and release years of 
+  all Harry Potter movies, in chronological order.
+ Your query should output a table with two columns, one 
+  for the title of each movie and one for the release year
+   of each movie.
+ You may assume that the title of all Harry Potter 
+  movies will begin with the words “Harry Potter”, 
+  and that if a movie title begins with the words 
+  “Harry Potter”, it is a Harry Potter movie.
+
+>>>malloy
+query: movies -> {
+  where: primaryTitle ~ 'Harry Potter%'
+  project: primaryTitle, startYear
+  order_by: 2
+}
+>>>markdown
+Question 6: Average Rating in 2012
+ Write a query to determine the average rating of all movies 
+  released in 2012.
+ Your query should output a table with a single column and 
+  a single row (not including the header) containing the
+   average rating.
+
+>>>malloy
+query: movies -> {
+  where: startYear = 2012
+  aggregate: average_rating is averageRating.avg()
+}
+>>>markdown
+## Question 7: Toy Story Who?
+ Write a query to list the names of all people 
+  who starred in Toy Story.
+ Your query should output a table with a single column for 
+  the name of each person. You may assume that there is only 
+  one movie in the database  with the title Toy Story.
+
+>>>malloy
+query: movies -> {
+  where: primaryTitle = 'Toy Story'
+  group_by: principals.people.primaryName
+  order_by: 1
+}
+>>>markdown
+## Question 8: Who's Who 2004
+ Write a query to list the names of all people who starred 
+  in a movie released in 2004, ordered by birth year.
+ Your query should output a table with a single column 
+  for the name of each person.
+ People with the same birth year may be listed in any order.
+ No need to worry about people who have no birth year listed,
+  so long as those who do have a birth year are listed 
+  in order. If a person appeared in more than one movie in 2004, 
+  they should only appear in your results once.
+
+>>>malloy
+query: movies -> {
+  where: startYear = 2004
+  group_by: 
+    principals.people.primaryName 
+    principals.people.birthYear
+  order_by: 1
+} 
+>>>markdown
+## Question 9: High Directors
+ Write  SQL query to list the names of all people who have 
+  directed a movie that received a rating of at least 9.0.
+ Your query should output a table with a single column for
+   the name of each person. If a person directed more than 
+  one movie that received a rating of at least 9.0, they 
+  should only appear in your results once.
+
+>>>malloy
+query: movies -> {
+  where: averageRating >= 9
+    and principals.category = 'director'
+  group_by: 
+    principals.people.primaryName 
+}
+>>>markdown
+## Question 10: Chadwick Boseman?
+ Write a Query to list the titles of the five highest 
+  rated movies (in order) that Chadwick Boseman starred 
+  in, starting with the highest rated.
+ Your query should output a table with a single column 
+  for the title of each movie.
+ You may assume that there is only one person in the 
+  database with the name Chadwick Boseman.
+>>>malloy
+query: movies -> {
+  where: principals.people.primaryName = 'Chadwick Boseman' 
+  group_by: 
+    primaryTitle
+    averageRating
+  order_by: 2 desc
+  limit: 5
+}
+>>>markdown
+## Question 11: Johnny and Helena?
+ Write a SQL query to list the titles of all
+  movies in which both Johnny Depp and Helena Bonham 
+  Carter starred.
+ Your query should output a table with a single column 
+  for the title of each movie.
+ You may assume that there is only one person in the 
+  database with the name Johnny Depp.
+ You may assume that there is only one person in 
+  the database with the name Helena Bonham Carter.
+
+>>>malloy
+query: johnnys_movies is movies ->{
+  where: principals.people.primaryName = 'Johnny Depp'
+  project: tconst
+}
+
+query: movies -> {
+  join_one: x is from(->johnnys_movies) with tconst
+  where: x.tconst != null
+    and  principals.people.primaryName = 'Helena Bonham Carter'
+  group_by: primaryTitle
+}
+
+>>>markdown
+## Question 12: One Degree of Kevin Bacon
+ Write a SQL query to list the names of all people who 
+  starred in a movie in which Kevin Bacon also starred.
+ Your query should output a table with a single column 
+  for the name of each person.
+ There may be multiple people named Kevin Bacon in 
+  the database. Be sure to only select the Kevin Bacon 
+  born in 1958.
+ Kevin Bacon himself should not be included in 
+  the resulting list.
+>>>malloy
+query: kevins_movies is movies ->{
+  where: principals.people.primaryName = 'Kevin Bacon'
+    and principals.people.birthYear = 1958
+  project: tconst
+}
+
+query: movies -> {
+  join_one: x is from(->kevins_movies) with tconst
+  where: x.tconst != null
+    and principals.people.primaryName != 'Kevin Bacon'
+  group_by: principals.people.primaryName
+  aggregate: title_count
+}

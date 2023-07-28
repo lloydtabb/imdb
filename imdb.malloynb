@@ -1,62 +1,43 @@
-[
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "# IMDB Analysis in Malloy\n",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "import \"imdb.malloy\"",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "## Top titles\n",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "query: movies->by_title + { limit: 20 } ",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "## Top 20 horror movies\n",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "query: movies-> by_title + { \n  where: genres.value = 'Horror'\n  limit: 20\n}",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "\n## Top Stars\n",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "query: movies->by_name + { \n  limit: 20 \n} ",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "## Top Comedy Stars\n",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "query: movies->by_name + { \n  where: genres.value = 'Comedy'\n  limit: 20 \n} ",
-    "metadata": {}
-  }
-]
+>>>markdown
+# IMDB Analysis in Malloy
+
+
+>>>malloy
+import "imdb.malloy"
+
+>>>markdown
+## Top titles
+
+
+>>>malloy
+query: movies->by_title + { limit: 20 } 
+
+>>>markdown
+## Top 20 horror movies
+
+
+>>>malloy
+query: movies-> by_title + { 
+  where: genres.value = 'Horror'
+  limit: 20
+}
+
+>>>markdown
+
+## Top Stars
+
+
+>>>malloy
+query: movies->by_name + { 
+  limit: 20 
+} 
+
+>>>markdown
+## Top Comedy Stars
+
+
+>>>malloy
+query: movies->by_name + { 
+  where: genres.value = 'Comedy'
+  limit: 20 
+} 

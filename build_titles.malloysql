@@ -1,20 +1,41 @@
+>>>markdown
+# Build Script for the IMDB
+
+This script produces three files.  Files are downloaded from https://datasets.imdbws.com/
+
+  Information courtesy of IMDb
+  (https://www.imdb.com).
+  Used with permission.
+
+* titles.parquet - movie info
+* principals.parquet - people that worked on the movie and what they did
+* names.parquet - information about the people that worked on the movies.
+
+This script is designed to run locally (not from the web version).  Clone the repository and launch VSCode
+
+To fetch the raw data, first.
+
+```
+cd data
+sh get.sh
+```
 >>>malloy
-
-// Build's three files 
-//  titles - movie info
-//  principals - people that worked on the movie and what they did
-//  names - information about the people that worked on the movies.
-
-// import raw file definitions.
+// Import the raw data.
 
 import "raw_data.malloy"
+>>>markdown
+## Build titles.parquet
 
->>>sql connection:duckdb
+We're building a subset of the data.  We limit the titles to those with more than XXXX votes in their ratings.
 
--- Build 'titles.parquet'
---  Limit the number of titles to ratings of more than XXXX
---  Join in the ratings data, nest the crew data
---  `:::` is a safe cast operation that converts strings to numbes
+`startYear`, `endYear` and `runtimeMinutes` (etc)) are stored as numbers mostly but have `\N` is some rows.  We use Malloy's safe cast operator `:::` to convert to strings.  
+
+We split `directors` and `writers` into an array using the DuckDB native `str_split!` function.  The explanation point `!` tells Malloy to trust the Native function.
+
+The first line `-- connection: duckdb` tells Malloy to use the `duckdb` database connection when executing SQL.
+>>>sql
+-- connection: duckdb
+
 copy %{
   raw_titles -> {
     join_one: raw_ratings on tconst = raw_ratings.tconst
@@ -34,10 +55,15 @@ copy %{
     }
 }%  to 'data/titles.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
 
+
+
+>>>markdown
+## Build principals.parquet
+
+Joining in titles insures that we only include rows where we have title data.
 >>>sql
--- Build 'principals.parquet'
---  Principals are people that worked on the movie
---  Only include data for movies we have titles for (the join)
+-- connection: duckdb
+
 copy 
   %{
     raw_principals -> {
@@ -57,10 +83,15 @@ copy
  to 'principals.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
 
 
->>>sql connection:duckdb
--- Build 'names.parquet'
---  Only include data for people in the principals table
---  `:::` safe casts the birthYear and deathYear to a numbers.
+
+
+>>>markdown
+## Build names.parquet
+
+Only include data for people in the principals table
+>>>sql
+-- connection: duckdb
+
 copy 
   %{
   raw_names -> {

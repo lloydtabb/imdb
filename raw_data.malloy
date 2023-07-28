@@ -7,68 +7,41 @@
 //  cd data
 //  sh get.sh
 
-
-sql: sql_titles is {
-	select: """ 
+source: raw_titles is duckdb.sql(""" 
 		SELECT * FROM
 		read_csv_auto(
-			'https://datasets.imdbws.com/title.basics.tsv.gz'
-			-- 'data/title.basics.tsv.gz'
+			-- 'https://datasets.imdbws.com/title.basics.tsv.gz'
+			'data/title.basics.tsv.gz'
 			, all_varchar=true, delim='\t', quote='',header=True)
-	"""
-	connection: "duckdb"
-}
+	""")
 
-source: raw_titles is from_sql(sql_titles)
-
-sql: sql_principals is {
-	select: """ 
+source: raw_principals is duckdb.sql(""" 
 		SELECT * FROM
 		read_csv_auto(
-			'https://datasets.imdbws.com/title.principals.tsv.gz'
-			-- 'data/title.principals.tsv.gz'
+			-- 'https://datasets.imdbws.com/title.principals.tsv.gz'
+			'data/title.principals.tsv.gz'
 			, all_varchar=true, delim='\t', quote='',header=True)
-	"""
-	connection: "duckdb"
-}
+	""")
 
-source: raw_principals is from_sql(sql_principals)
-
-sql: sql_ratings is {
-	select: """ 
+source: raw_ratings is duckdb.sql(""" 
 		SELECT * FROM
 		read_csv_auto(
-			 'https://datasets.imdbws.com/title.ratings.tsv.gz'
-			-- 'data/title.ratings.tsv.gz'
+			-- 'https://datasets.imdbws.com/title.ratings.tsv.gz'
+			'data/title.ratings.tsv.gz'
 			, all_varchar=true, delim='\t', quote='',header=True)
-	"""
-	connection: "duckdb"
-}
+	""")
 
-source: raw_ratings is from_sql(sql_ratings)
-
-sql: sql_crew is {
-	select: """ 
+source: raw_crew is duckdb.sql(""" 
 		SELECT * FROM
 		read_csv_auto(
-			'https://datasets.imdbws.com/title.crew.tsv.gz'
-			-- 'data/title.crew.tsv.gz'
+			-- 'https://datasets.imdbws.com/title.crew.tsv.gz'
+			'data/title.crew.tsv.gz'
 			, all_varchar=true, delim='\t', quote='',header=True)
-	"""
-	connection: "duckdb"
-}
-
-source: raw_crew is from_sql(sql_crew)
-
-sql: sql_names is {
-	select: """ 
+	""")
+source: raw_names is duckdb.sql(""" 
 		SELECT * FROM
 		read_csv_auto(
-			'https://datasets.imdbws.com/name.basics.tsv.gz'
-			-- 'data/name.basics.tsv.gz'
+			-- 'https://datasets.imdbws.com/name.basics.tsv.gz'
+			'data/name.basics.tsv.gz'
 			, all_varchar=true, delim='\t', quote='',header=True)
-	"""
-	connection: "duckdb"
-}
-
-source: raw_names is from_sql(sql_names)
+	""")

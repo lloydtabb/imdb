@@ -1,20 +1,10 @@
-[
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "# Star Trek dashboard\nAll the Star Trek movies.",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "import \"imdb.malloy\"",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "malloy",
-    "value": "\nrun: movies -> titles_dashboard {   \n  where: primaryTitle ~ r'Star Trek' and startYear < 2020\n}",
-    "metadata": {}
-  }
-]
+>>>markdown
+# Star Trek dashboard
+All the Star Trek movies.
+>>>malloy
+import "imdb.malloy" 
+>>>malloy
+
+run: movies -> titles_dashboard {   
+  where: primaryTitle ~ r'Star Trek' and startYear < 2020
+}
