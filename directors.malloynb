@@ -2,7 +2,7 @@
 # Directors
 Who are the top directors?  What did they direct? In each genres?  Who do they work with?
 >>>malloy
-import "imdb.malloy" 
+import {movies} from "imdb.malloy" 
 >>>markdown
 ## Top directors and their 5 best movies
 >>>malloy

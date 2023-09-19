@@ -2,7 +2,7 @@
 # Steven Spielberg
 What did he direct? When? Who does he commonly work with and on what?
 >>>malloy
-import "imdb.malloy" 
+import {movies} from "imdb.malloy" 
 >>>markdown
 ## Steven Spielberg movies
 >>>malloy

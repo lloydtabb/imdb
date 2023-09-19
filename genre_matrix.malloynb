@@ -1,13 +1,10 @@
 >>>markdown
 # Genres Matrix
 Genre combinations tell you what to expect in a movie.  What are the top movies in each combination pair?
-
 >>>malloy
-import "imdb.malloy" 
-
+import {movies} from "imdb.malloy" 
 >>>markdown
 ## Genre matrix, top movies
-
 >>>malloy
 run: movies + {
   join_many: x is from( movies-> {

@@ -2,7 +2,7 @@
 # Movie stars, titles time and jobs
 Movie people work lots of jobs.  Take a look at the top stars, what they work on, how long they have been working and what they do.
 >>>malloy
-import "imdb.malloy" 
+import {movies} from "imdb.malloy" 
 >>>malloy
 # dashboard
 run: movies->  by_name + {

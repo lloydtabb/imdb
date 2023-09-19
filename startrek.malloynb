@@ -2,7 +2,7 @@
 # Star Trek dashboard
 All the Star Trek movies.
 >>>malloy
-import "imdb.malloy" 
+import {movies} from "imdb.malloy" 
 >>>malloy
 
 run: movies -> titles_dashboard {   

@@ -1,10 +1,8 @@
 >>>markdown
 # Genre Analysis
 Top movies, top people, popularity over time
-
 >>>malloy
-import "imdb.malloy" 
-
+import {movies} from "imdb.malloy" 
 >>>malloy
 # dashboard
 run: movies-> {
