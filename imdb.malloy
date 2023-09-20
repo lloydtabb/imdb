@@ -6,17 +6,17 @@
 //  About Fiddles: https://github.com/lloydtabb/malloy_fiddle_dist/
 
 
-source: people is table('duckdb:data/names.parquet') {
+source: people is duckdb.table('data/names.parquet') {
 // cast, crew, everyone involved in movies
   primary_key: nconst
 }
 
-source: principals is table('duckdb:data/principals.parquet') {
+source: principals is duckdb.table('data/principals.parquet') {
 // a mapping table that links people to movies, along with their job on that movie.
   join_one: people is people on nconst = people.nconst
 }
 
-source: movies is table('duckdb:data/titles.parquet') + {
+source: movies is duckdb.table('data/titles.parquet') + {
 // all the movies
   join_many: principals on tconst = principals.tconst
   primary_key: tconst
@@ -36,29 +36,29 @@ source: movies is table('duckdb:data/titles.parquet') + {
     movie_url is concat('https://www.imdb.com/title/',tconst)
 
 
-  query: by_title is {
+  view: by_title is {
     group_by: primaryTitle, startYear, numVotes
     order_by: 3 desc
   }
-  query: by_year is {
+  view: by_year is {
     group_by: startYear
     aggregate: title_count
     order_by: startYear desc
   }
 
-  query: by_name is {
+  view: by_name is {
     group_by:
       principals.people.primaryName, principals.nconst
     aggregate:
       total_ratings
       title_count
   }
-  query: by_job_category is {
+  view: by_job_category is {
     group_by: job_category is principals.category
     aggregate: title_count
   }
 
-  query: by_genre is {
+  view: by_genre is {
     group_by: genre is genres.value
     aggregate: 
       title_count, 
@@ -66,17 +66,17 @@ source: movies is table('duckdb:data/titles.parquet') + {
       percent_of_titles
 
   }
-  query: by_character is {
+  view: by_character is {
     group_by: principals.characters.value
     aggregate: title_count
   }
 
-  query: by_year_and_genre is by_year + {
+  view: by_year_and_genre is by_year + {
     nest: by_genre
   }
 
   # dashboard
-  query: titles_dashboard is {
+  view: titles_dashboard is {
     group_by: 
       movie_image
       production_year is startYear
