@@ -6,17 +6,17 @@
 //  About Fiddles: https://github.com/lloydtabb/malloy_fiddle_dist/
 
 
-source: people is duckdb.table('data/names.parquet') {
+source: people is duckdb.table('data/names.parquet') extend {
 // cast, crew, everyone involved in movies
   primary_key: nconst
 }
 
-source: principals is duckdb.table('data/principals.parquet') {
+source: principals is duckdb.table('data/principals.parquet') extend {
 // a mapping table that links people to movies, along with their job on that movie.
   join_one: people is people on nconst = people.nconst
 }
 
-source: movies is duckdb.table('data/titles.parquet') + {
+source: movies is duckdb.table('data/titles.parquet') extend {
 // all the movies
   join_many: principals on tconst = principals.tconst
   primary_key: tconst
@@ -40,6 +40,7 @@ source: movies is duckdb.table('data/titles.parquet') + {
     group_by: primaryTitle, startYear, numVotes
     order_by: 3 desc
   }
+
   view: by_year is {
     group_by: startYear
     aggregate: title_count
@@ -53,6 +54,7 @@ source: movies is duckdb.table('data/titles.parquet') + {
       total_ratings
       title_count
   }
+
   view: by_job_category is {
     group_by: job_category is principals.category
     aggregate: title_count
@@ -66,6 +68,7 @@ source: movies is duckdb.table('data/titles.parquet') + {
       percent_of_titles
 
   }
+
   view: by_character is {
     group_by: principals.characters.value
     aggregate: title_count
@@ -93,3 +96,7 @@ source: movies is duckdb.table('data/titles.parquet') + {
     order_by: 2 desc
   }
 }
+
+
+// example query
+run: movies -> by_name
