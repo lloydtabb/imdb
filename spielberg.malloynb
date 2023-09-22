@@ -16,12 +16,17 @@ run: speiberg_movies
 ## People that work with Steven Spielberg 
 >>>malloy
 run: movies -> {
-  group_by: principals.people.primaryName
-  aggregate: title_count
+  // join in the query above.
   extend: {
     join_one: x is from(->speiberg_movies) on x.tconst=tconst
   }
+  // filter the list to speilberg movies.
   where: x.tconst != null
+
+  group_by: principals.people.primaryName
+  aggregate: title_count
+
+
   where: principals.people.nconst != x.nconst
   aggregate: `years` is concat(min(startYear)::string, 
       '-', max(startYear)::string)
