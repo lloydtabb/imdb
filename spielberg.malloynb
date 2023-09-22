@@ -18,7 +18,7 @@ run: speiberg_movies
 run: movies -> {
   // join in the query above.
   extend: {
-    join_one: x is from(->speiberg_movies) on x.tconst=tconst
+    join_one: x is speiberg_movies on x.tconst=tconst
   }
   // filter the list to speilberg movies.
   where: x.tconst != null
