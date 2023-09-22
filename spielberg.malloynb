@@ -15,8 +15,12 @@ run: speiberg_movies
 >>>markdown
 ## People that work with Steven Spielberg 
 >>>malloy
-run: movies -> by_name + {
-  join_one: x is from(->speiberg_movies) on x.tconst=tconst
+run: movies -> {
+  group_by: principals.people.primaryName
+  aggregate: title_count
+  extend: {
+    join_one: x is from(->speiberg_movies) on x.tconst=tconst
+  }
   where: x.tconst != null
   where: principals.people.nconst != x.nconst
   aggregate: `years` is concat(min(startYear)::string, 
