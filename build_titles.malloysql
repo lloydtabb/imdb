@@ -13,7 +13,6 @@ This script produces three files.  Files are downloaded from https://datasets.im
 
 This script is designed to run locally (not from the web version).  Clone the repository and launch VSCode
 
-
 >>>markdown
 ## Raw Data Definitions
 Define sources for all the raw data.
@@ -83,7 +82,7 @@ copy %{
     join_one: raw_ratings on tconst = raw_ratings.tconst
     join_one: raw_crew on tconst = raw_crew.tconst
     where: raw_ratings.numVotes > 30000
-    project:
+    select:
       tconst
       isAdult, originalTitle, primaryTitle
       startYear is startYear:::number 
@@ -98,7 +97,6 @@ copy %{
 }%  to 'data/titles.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
 
 
-
 >>>markdown
 ## Build principals.parquet
 
@@ -111,7 +109,7 @@ copy
     raw_principals -> {
       join_one: titles is table('duckdb:data/titles.parquet') on tconst = titles.tconst
       where: titles.tconst != null
-      project: 
+      select: 
         tconst
         ordering
         nconst
@@ -123,7 +121,6 @@ copy
     }
   }%
  to 'principals.parquet' (FORMAT 'parquet', CODEC 'ZSTD')
-
 
 
 

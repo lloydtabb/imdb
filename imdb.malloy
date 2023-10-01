@@ -5,7 +5,6 @@
 //  Github: https://github.com/lloydtabb/imdb_fiddle
 //  About Fiddles: https://github.com/lloydtabb/malloy_fiddle_dist/
 
-
 source: people is duckdb.table('data/names.parquet') extend {
 // cast, crew, everyone involved in movies
   primary_key: nconst
@@ -22,7 +21,7 @@ source: movies is duckdb.table('data/titles.parquet') extend {
   primary_key: tconst
 
   measure:
-    title_count is count(distinct tconst)
+    title_count is count(tconst)
     row_count is count()
     total_ratings is sum(numVotes/1000.0)
     average_rating is averageRating.avg()

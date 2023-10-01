@@ -6,12 +6,13 @@ import {movies} from "imdb.malloy"
 >>>markdown
 ## Genre matrix, top movies
 >>>malloy
-run: movies + {
-  join_many: x is from( movies-> {
-    group_by: tconst, genres.value
-  } ) on tconst = x.tconst
+query: movie_genres is movies -> {
+  group_by: tconst, genres.value
 }
-->  {
+run: movies -> {
+  extend: {
+    join_many: x is movie_genres on tconst = x.tconst
+  } 
   where: genres.value != x.value
   group_by: genre1 is genres.value
   aggregate:  title_count
