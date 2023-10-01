@@ -28,26 +28,3 @@ run: movies -> {
     }
   }
 }
->>>malloy
-run: movies 
-->  {
-  extend : {
-    join_many: x is from( movies-> {
-      group_by: tconst, genres.value
-    } ) on tconst = x.tconst
-  }
- 
-  group_by: genre1 is genres.value
-  aggregate:  title_count
-  nest: genre is {
-    group_by: 
-      genre1 is genres.value
-      genre2 is x.value
-    # list
-    nest: titles is {
-      group_by: primaryTitle, numVotes
-      order_by: 2 desc
-      limit: 10
-    }
-  }
-}
